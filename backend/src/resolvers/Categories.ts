@@ -1,7 +1,7 @@
 import { Arg, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { Category, CategoryCreateInput, CategoryUpdateInput } from "../entities/Category";
 import { GraphQLResolveInfo } from "graphql";
-import { optimizedRequest } from "../utils/optimizedRequest";
+import { makeRelations } from "../utils/makeRelations";
 
 
 @Resolver()
@@ -9,9 +9,8 @@ export class CategoriesResolver {
     @Query(() => [Category])
     async categories(@Info() info: GraphQLResolveInfo): Promise<Category[]> {
         const categories = await Category.find({
-            relations: {
-                ads: optimizedRequest(info, "ads"),
-            },
+            relations:
+                makeRelations(info, Category),
         });
         return categories;
     }
