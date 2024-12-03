@@ -55,6 +55,7 @@ export class TagsResolver {
         const tag = await Tag.findOneBy({ id });
         if (tag !== null) {
             await tag.remove();
+            Object.assign(tag, { id })
             return tag;
         } else {
             return null;

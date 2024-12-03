@@ -8,6 +8,13 @@ import AdDetails from "./pages/AdDetails.tsx";
 import Page404 from "./pages/Page404.tsx";
 import Category from "./pages/Category.tsx";
 import AdEditor from "./pages/AdEditor.tsx";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+
+
+const client = new ApolloClient({
+  uri: "http://localhost:5000",
+  cache: new InMemoryCache(),
+});
 
 const router = createBrowserRouter([
   {
@@ -51,5 +58,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <ApolloProvider client={client}>
+    <RouterProvider router={router} />
+  </ApolloProvider>
 );

@@ -9,7 +9,7 @@ const Cart = ({ showPrice }: totalPriceType) => {
     <div
       className={`${
         showPrice > 0 ? "cart-active" : "cart"
-      } button-primary transition flex-col-center`}
+      } button-primary transition flex flex-col justify-center items-center`}
     >
       <img width={28} height={28} src={CartImg} alt="" />
       <p>Prix total du panier : </p>

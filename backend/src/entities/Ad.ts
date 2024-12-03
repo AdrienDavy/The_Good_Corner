@@ -23,20 +23,20 @@ import {
 import { Category } from "./Category";
 import { Tag } from "./Tag";
 import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
-import { IdInput } from "./id";
+import { IdInput } from "./Id";
 
 @Entity()
 @ObjectType()
 export class Ad extends BaseEntity {
     @PrimaryGeneratedColumn()
-    @Field(() => ID)
+    @Field(() => ID!)
     id!: number;
 
     @ManyToOne(() => Category, (category) => category.ads)
     @Field(() => Category)
     category!: Category;
 
-    @ManyToMany(() => Tag, (tag) => tag.ads, { eager: true })
+    @ManyToMany(() => Tag, (tag) => tag.ads)
     @JoinTable()
     @Field(() => [Tag])
     tags!: Tag[];

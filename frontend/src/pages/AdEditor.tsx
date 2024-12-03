@@ -1,17 +1,27 @@
 import { useEffect, useState } from "react";
-import useApi from "../services/useApi";
 import "./AdEditor.css";
-import DropdownCheckbox from "../components/DropdownCheckbox";
 import { AdType, CategoryType, TagType } from "../types";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import OptionSelect from "../components/OptionSelect";
+import ButtonTriggerModal from "../components/ButtonTriggerModal";
+import CategoryEditor from "../components/CategoryEditor";
+import { useMutation, useQuery } from "@apollo/client";
+import { queryCategories } from "../queries/QueryCategories";
+import { queryAd } from "../queries/QueryAd";
+import { queryTags } from "../queries/QueryTags";
+import { mutationCreateAd } from "../queries/CreateAd";
+import { mutationUpdateAd } from "../queries/UpdateAd";
+import MultiSelect from "../components/MultiSelect";
+import TagEditor from "../components/TagEditor";
+import { toast } from "react-toastify";
+import { handleValidationErrors } from "../utils/handleValidationErrors";
 
 const AdEditor = () => {
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const id = params.id && Number(params.id);
-  const [ad, setAd] = useState<AdType | null>(null);
   const locationPathname = useLocation();
-  const api = useApi();
+  const isEditPage = locationPathname.pathname.includes("edit");
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -19,61 +29,53 @@ const AdEditor = () => {
   const [location, setLocation] = useState("");
   const [picture, setPicture] = useState("");
   const [owner, setOwner] = useState("");
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [tags, setTags] = useState<TagType[]>([]);
-
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tagIds, setTagIds] = useState<number[]>([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        {
-          const result = await api.get<CategoryType[]>("/categories");
-          setCategories(result.data);
-          // if (result.data.length !== 0) {
-          //   setCategoryId(result.data[0].id);
-          // }
-        }
-        {
-          const result = await api.get<TagType[]>("/tags");
-          setTags(result.data);
-        }
-      } catch (error) {
-        console.error("error", error);
-      }
-    };
-    fetchCategories();
-  }, [api]);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  // --------------------------------QUERIES------------------------------------------
+
+  const { data: categoriesData } = useQuery<{ categories: CategoryType[] }>(
+    queryCategories
+  );
+  const categories = categoriesData?.categories;
+
+  const { data: tagsData } = useQuery<{ tags: TagType[] }>(queryTags);
+  const tags = tagsData?.tags;
+
+  const { data: adData } = useQuery(queryAd, { variables: { id }, skip: !id });
+  const ad = adData?.ad;
+
+  const [doCreateAd, { loading: createLoading }] = useMutation<{
+    createAd: AdType;
+  }>(mutationCreateAd, {
+    refetchQueries: [queryAd],
+    onError: (error) => handleValidationErrors(error, setFieldErrors),
+  });
+
+  const [doUpdateAd, { loading: updateLoading }] = useMutation<{
+    updateAd: AdType;
+  }>(mutationUpdateAd, { refetchQueries: [queryAd] });
+
+  // ----------------------------------------------------------------------------------
 
   useEffect(() => {
-    const fetchAd = async () => {
-      try {
-        if (id) {
-          const result = await api.get<AdType>(`/ads/${id}`);
-          setAd(result.data);
-        }
-      } catch (error) {
-        console.error("Error fetching ad:", error);
-      }
-    };
-    fetchAd();
-  }, [api, id]);
-
-  useEffect(() => {
-    if (ad && locationPathname.pathname.includes("edit")) {
+    if (ad && isEditPage) {
       setTitle(ad.title);
       setDescription(ad.description);
       setPrice(ad.price);
       setLocation(ad.location);
       setPicture(ad.picture);
       setOwner(ad.owner);
-      setCategoryId(ad.category.id);
-      if (ad.tags) {
-        setTagIds(ad.tags.map((tag) => tag.id));
+      setCategoryId(ad.category?.id);
+      const tagsIds: number[] = [];
+      for (const tag of ad.tags) {
+        tagsIds.push(tag.id);
       }
+      setTagIds(tagsIds);
     }
-  }, [ad, locationPathname]);
+  }, [ad, isEditPage]);
 
   useEffect(() => {
     if (locationPathname.pathname === "/ads/new") {
@@ -91,30 +93,59 @@ const AdEditor = () => {
   const handleSubmit = async () => {
     try {
       if (ad) {
-        await api.put<AdType>(`/ads/${Number(ad.id)}`, {
-          title,
-          description,
-          price,
-          location,
-          picture,
-          owner,
-          category: categoryId ? { id: categoryId } : null,
-          tags: tagIds.map((id) => ({ id })),
+        const { data } = await doUpdateAd({
+          variables: {
+            id: ad.id,
+            data: {
+              title,
+              description,
+              price,
+              location,
+              picture,
+              owner,
+              category: categoryId ? { id: categoryId } : null,
+              tags: tagIds.map((id) => ({ id })),
+            },
+          },
         });
-        navigate(`/ads/${ad.id}`, { replace: true });
+        toast.success("Offre modifiée avec succès !", {
+          className: "toast-success bg-primary",
+          autoClose: 3000,
+          position: "top-right",
+        });
+        navigate(`/ads/${data?.updateAd.id}`, { replace: true });
       } else {
-        const result = await api.post<AdType>("/ads", {
-          title,
-          description,
-          price,
-          location,
-          picture,
-          owner,
-          category: categoryId ? { id: categoryId } : null,
-          tags: tagIds.map((id) => ({ id })),
+        if (!categoryId) {
+          setFieldErrors(() => ({
+            category: "Une catégorie doit être sélectionnée.",
+          }));
+          setTimeout(() => {
+            setFieldErrors(() => ({
+              category: "",
+            }));
+          }, 2000);
+          return; // On arrête la soumission si `categoryId` est manquant
+        }
+        const { data } = await doCreateAd({
+          variables: {
+            data: {
+              title,
+              description,
+              price,
+              location,
+              picture,
+              owner,
+              category: { id: categoryId },
+              tags: tagIds.map((id) => ({ id })),
+            },
+          },
         });
-        console.log("CREATED");
-        navigate(`/ads/${result.data.id}`, { replace: true });
+        toast.success("Offre crée avec succès !", {
+          className: "toast-success bg-primary",
+          autoClose: 3000,
+          position: "top-right",
+        });
+        navigate(`/ads/${data?.createAd.id}`, { replace: true });
       }
     } catch (error) {
       console.error(error);
@@ -122,87 +153,94 @@ const AdEditor = () => {
   };
 
   return (
-    <form className="ad-editor-form" onSubmit={(e) => e.preventDefault()}>
-      <label>
+    <form
+      className=" bg-light p-8 rounded-lg flex flex-col gap-4"
+      onSubmit={(e) => e.preventDefault()}
+    >
+      <label className=" w-full">
         <input
-          className="ad-editor-text-field"
+          className={`w-full py-2 px-1 border-2 rounded-lg ${
+            fieldErrors.title ? "border-red-500" : "border-primary"
+          }`}
           type="text"
           value={title}
           placeholder="Titre de l'annonce"
           onChange={(e) => setTitle(e.target.value)}
         />
       </label>
-      <label>
+      {fieldErrors.title && (
+        <p className="text-red-500 text-sm mt-1">{fieldErrors.title}</p>
+      )}
+      <label className=" w-full">
         <textarea
-          className="ad-editor-text-field"
+          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
           value={description}
           placeholder="Description de l'annonce"
           onChange={(e) => setDescription(e.target.value)}
         />
       </label>
-      <label>
+      <label className=" w-full">
         <input
-          className="ad-editor-text-field"
+          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
           type="number"
           value={price}
           placeholder="Prix"
           onChange={(e) => setPrice(Number(e.target.value))}
         />
       </label>
-      <label>
+      <label className=" w-full">
         <input
-          className="ad-editor-text-field"
+          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
           type="text"
           value={location}
           placeholder="Localisation"
           onChange={(e) => setLocation(e.target.value)}
         />
       </label>
-      <label>
+      <label className=" w-full">
         <input
-          className="ad-editor-text-field"
+          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
           type="text"
           value={picture}
           placeholder="Url de l'image"
           onChange={(e) => setPicture(e.target.value)}
         />
       </label>
-      <label>
+      <label className=" w-full">
         <input
-          className="ad-editor-text-field"
+          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
           type="mail"
           value={owner}
           placeholder="johndoe@mail.com"
           onChange={(e) => setOwner(e.target.value)}
         />
       </label>
+      <div className="flex">
+        <OptionSelect
+          options={categories}
+          onSelect={(category) => setCategoryId(category.id)}
+          actualOption={isEditPage && ad?.category}
+          defaultOption="Séléctionner une catégorie"
+          optionError={fieldErrors}
+        />
 
-      <DropdownCheckbox
-        idValue={categoryId}
-        setIdValue={setCategoryId}
-        datas={categories}
-        dataIds={null}
-        setDataIds={null}
-        selectionWord="Catégorie"
-        simpleDropdown={true}
-        setCategories={setCategories}
-        setTags={setTags}
-      />
-
-      <DropdownCheckbox
-        idValue={null}
-        setIdValue={null}
-        datas={tags}
-        dataIds={tagIds}
-        setDataIds={setTagIds}
-        selectionWord="tags"
-        simpleDropdown={false}
-        setCategories={setCategories}
-        setTags={setTags}
-      />
-
+        <ButtonTriggerModal id="modalCategory" title="Ajouter une catégorie">
+          <CategoryEditor />
+        </ButtonTriggerModal>
+      </div>
+      {fieldErrors.category && !categoryId && (
+        <p className="text-red-500 text-sm">{fieldErrors.category}</p>
+      )}
+      <div className="flex">
+        <MultiSelect dataIds={tagIds} setDataIds={setTagIds} tagsData={tags} />
+        <ButtonTriggerModal id="modalTag" title="Ajouter un tag">
+          <TagEditor />
+        </ButtonTriggerModal>
+      </div>
       <button className="button" onClick={handleSubmit}>
-        {ad ? "Modifier mon annonce" : "Créer une annonce"}
+        {ad
+          ? `${updateLoading ? "Modification..." : "Modifier l'annonce"}`
+          : `${createLoading ? "Création..." : "Créer une annonce"}`}
       </button>
     </form>
   );

@@ -1,7 +1,8 @@
 import { Arg, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { Category, CategoryCreateInput, CategoryUpdateInput } from "../entities/Category";
-import { GraphQLResolveInfo } from "graphql";
+import { GraphQLError, GraphQLResolveInfo } from "graphql";
 import { makeRelations } from "../utils/makeRelations";
+import { validate } from "class-validator";
 
 
 @Resolver()
@@ -30,12 +31,11 @@ export class CategoriesResolver {
     }
 
     @Mutation(() => Category)
-    async createCategory(@Arg("data", () => CategoryCreateInput) data: CategoryCreateInput): Promise<Category> {
+    async createCategory(@Arg("data", () => CategoryCreateInput, { validate: true }) data: CategoryCreateInput): Promise<Category> {
         const newCategory = new Category();
         Object.assign(newCategory, data);
         await newCategory.save();
         return newCategory;
-
     }
 
     @Mutation(() => Category, { nullable: true })
@@ -58,6 +58,7 @@ export class CategoriesResolver {
         const category = await Category.findOneBy({ id });
         if (category !== null) {
             await category.remove();
+            Object.assign(category, { id });
             return category;
         } else {
             return null;
