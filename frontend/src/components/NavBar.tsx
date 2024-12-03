@@ -1,32 +1,25 @@
 import { Link } from "react-router-dom";
 import "./Header.css";
-import React, { useEffect, useState } from "react";
-import useApi from "../services/useApi";
-import { CategoryHeaderType } from "../types";
+import React from "react";
+import { useQuery } from "@apollo/client";
+import { queryCategories } from "../queries/QueryCategories";
+import { CategoryType } from "../types";
+import CategoriesLoader from "../loaders/NavBar/CategoriesLoader";
 
-const Header = () => {
-  const api = useApi();
-
-  const [categories, setCategories] = useState<CategoryHeaderType[]>([]);
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const result = await api.get<CategoryHeaderType[]>("/categories");
-        setCategories(result.data);
-      } catch (error) {
-        console.error("error", error);
-      }
-    };
-    fetch();
-  }, [api]);
-
-  if (!categories) {
-    return <div>Loading...</div>;
-  }
+const NavBar = () => {
+  const { data, error, loading } = useQuery<{ categories: CategoryType[] }>(
+    queryCategories
+  );
+  const categories = data?.categories;
 
   return (
-    <header className="header">
-      <div className="main-menu">
+    <>
+      {error && (
+        <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg">
+          Error : {error.message}
+        </p>
+      )}
+      <nav className="main-menu">
         <h1>
           <Link to="/" className="button logo link-button">
             <span className="mobile-short-label">TGC</span>
@@ -55,9 +48,10 @@ const Header = () => {
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>
         </Link>
-      </div>
+      </nav>
       <nav className="categories-navigation">
-        {categories.map((category, index) => (
+        {loading === true && categories === undefined && <CategoriesLoader />}
+        {categories?.map((category, index) => (
           <React.Fragment key={category.id}>
             <Link
               to={`categories/${category.id}`}
@@ -65,12 +59,12 @@ const Header = () => {
             >
               {category.name}
             </Link>{" "}
-            {index < categories.length - 1 ? "•" : ""}
+            {index < categories?.length - 1 ? "•" : ""}
           </React.Fragment>
         ))}
       </nav>
-    </header>
+    </>
   );
 };
 
-export default Header;
+export default NavBar;

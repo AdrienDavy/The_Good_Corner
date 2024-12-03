@@ -1,34 +1,28 @@
 import "reflect-metadata";
-import express from "express";
-import cors from "cors";
-// import { findAll } from "./models/AdManager";
-
 import { datasource } from "./datasource";
-import { Category } from "./entities/Category";
-import { Ad } from "./entities/Ad";
-import { router as AdsRouter } from "./controllers/adsController";
-import { router as CategoriesRouter } from "./controllers/categoriesController";
-import { router as TagsRouter } from "./controllers/tagsController";
-
-const app = express();
-const port = 5000;
-
-app.use(express.json());
-app.use(cors({
-  origin: "http://localhost:5173",
-}))
-
-app.use("/ads", AdsRouter);
-app.use("/categories", CategoriesRouter);
-app.use("/tags", TagsRouter);
+import { buildSchema } from "type-graphql";
+import { PicturesResolver } from "./resolvers/Pictures";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { CategoriesResolver } from "./resolvers/Categories";
+import { AdsResolver } from "./resolvers/Ads";
+import { TagsResolver } from "./resolvers/Tags";
 
 async function initiliaze() {
   await datasource.initialize();
   console.log("Datasource is connected 🔌");
 
-  app.listen(port, () => {
-    console.log(`Listening on port : ${port} 🚀`);
-  });
+  const schema = await buildSchema({
+    resolvers: [AdsResolver, CategoriesResolver, TagsResolver],
+    validate: true
+  })
+
+  const server = new ApolloServer({ schema });
+
+  const { url } = await startStandaloneServer(server, { listen: { port: 5000 } });
+  console.log(`GraphQL server ready at ${url}`);
+
+
 }
 
 initiliaze();

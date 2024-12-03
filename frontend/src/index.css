@@ -2,139 +2,124 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: #ffa41b;
+  --color-primary-hover: #f3af4a;
+  --color-secondary: #03031b;
+  --color-tertiary: #e3e3e2;
+  --color-dark: #03031b;
+  --color-light: #fffff0;
+}
+
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  list-style-type: none;
-  text-decoration: none;
+  @apply m-0 p-0 box-border list-none no-underline;
 }
 
 body {
-  margin: 0;
+  @apply m-0 bg-gray-100;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background-color: #f5f5f5;
-  text-decoration: none;
 }
 
 h1 {
-  margin: 0;
+  @apply m-0;
 }
 
-.button {
-  min-width: 40px;
-  height: 40px;
-  padding: 8px;
-  border-radius: 8px;
-  border: 2px solid #ffa41b;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-  font-size: 12px;
-  font-weight: bold;
-  color: #ffa41b;
-  background-color: white;
-  cursor: pointer;
-  transition: all 250ms ease-in-out;
+@layer components {
+  .button {
+    @apply min-w-[40px] h-10 px-2 py-1 rounded-lg border-2 border-primary flex justify-center items-center gap-1 text-xs font-bold text-primary bg-light cursor-pointer transition-all duration-200 ease-in-out;
+  }
+
+  .button-primary {
+    @apply bg-primary text-light;
+  }
+
+  .text-field-with-button {
+    @apply flex flex-grow justify-center gap-1;
+  }
+
+  .Toastify__toast-container {
+    z-index: 9999; /* Met un z-index élevé pour être au-dessus de tout */
+  }
+
+  .toast-custom {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+  }
+
+  .toast-success {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+
+  .toast-error {
+    background-color: #ff4d4f;
+    color: #fff;
+  }
+
+  .toast-icon {
+    font-size: 1.5rem;
+  }
 }
 
 .logo {
-  border: none;
+  @apply border-none;
 }
 
-.button-primary {
-  background-color: #ffa41b;
-  color: white;
-}
+@layer utilities {
+  .transition {
+    @apply transition-all duration-200 ease-in-out;
+  }
 
-.text-field-with-button {
-  display: flex;
-  flex-grow: 1;
-  justify-content: center;
-  gap: 4px;
-}
+  .custom-select {
+    @apply appearance-none cursor-pointer;
+  }
 
-.full-width {
-  width: 100%;
-}
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: var(--color-tertiary);
+    border-radius: 0.5rem;
+  }
 
-.flex-col-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    cursor: -webkit-grabbing;
+    border-radius: 0.5rem;
+    transition: all 350ms ease;
+  }
 
-.transition {
-  transition: all 250ms ease-in-out;
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-hover);
+  }
 }
 
 /* -----------------------------LOADER---------------------------- */
 .loader-container {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  display: grid;
-  align-items: center;
-  justify-content: center;
+  @apply fixed left-0 bottom-0 w-full h-full grid place-items-center;
 }
 
 .loader {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-  border: 3px solid;
-  border-color: #fff #fff transparent;
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
+  @apply w-12 h-12 rounded-full border border-solid border-light border-t-transparent relative box-border animate-spin;
 }
 
 .loader::after {
-  content: "";
-  box-sizing: border-box;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  margin: auto;
-  border: 3px solid;
-  border-color: transparent #ffa41b #ffa41b;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  animation: rotationBack 0.5s linear infinite;
-  transform-origin: center center;
+  @apply content-[''] box-border absolute inset-0 m-auto border border-solid border-transparent border-b-primary border-r-primary w-6 h-6 rounded-full animate-[spin_0.5s_linear_infinite];
 }
 
-@keyframes rotation {
+/* Keyframes pour l'animation */
+@keyframes spin {
   0% {
     transform: rotate(0deg);
   }
-
   100% {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes rotationBack {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(-360deg);
   }
 }

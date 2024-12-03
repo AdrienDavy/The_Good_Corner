@@ -1,46 +1,36 @@
-import { useEffect, useState } from "react";
 import AdCard from "./AdCard";
-import "./RecentAds.css";
-import Cart from "./Cart";
-import useApi from "../services/useApi";
 import { AdType } from "../types";
+import { useQuery } from "@apollo/client";
+import { queryRecentAds } from "../queries/QueryAds";
+import Spinner from "../loaders/Spinner";
 
 const RecentAds = () => {
-  const api = useApi();
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [ads, setAds] = useState<AdType[]>([]);
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const result = await api.get<AdType[]>("/ads");
-        setAds(result.data);
-      } catch (error) {
-        console.error("error", error);
-      }
-    };
-    fetch();
-  }, [api]);
-
-  if (!ads) {
-    return (
-      <div className="loader-container">
-        <span className="loader"></span>
-      </div>
-    );
-  }
-
+  const { data, error, loading } = useQuery<{ ads: AdType[] }>(queryRecentAds, {
+    fetchPolicy: "cache-and-network",
+  });
+  const ads = data?.ads;
   return (
     <>
+      {error && (
+        <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg">
+          Error : {error.message}
+        </p>
+      )}
+      {ads === null && (
+        <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg">
+          OUPS ! Désolé rien trouvé...
+        </p>
+      )}
       <h2>Annonces récentes</h2>
-      <section className="recent-ads">
-        {ads.map((ad) => (
-          <AdCard
-            key={ad.id}
-            ad={ad}
-            onAddToCart={() => setTotalPrice(totalPrice + ad.price)}
-          />
+      <section className=" mt-32 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 overflow-hidden">
+        {loading && ads === undefined && (
+          <div className="fixed left-0 right-0 top-0 bottom-0 flex justify-center items-center z-10">
+            <Spinner />
+          </div>
+        )}
+        {ads?.map((ad) => (
+          <AdCard key={ad.id} ad={ad} />
         ))}
-        {totalPrice >= 0 && <Cart showPrice={totalPrice} />}
       </section>
     </>
   );

@@ -1,51 +1,53 @@
-import { useEffect, useState } from "react";
-import useApi from "../services/useApi";
 import AdCard from "../components/AdCard";
-import Cart from "../components/Cart";
 import { useParams } from "react-router-dom";
 import { CategoryType } from "../types";
+import { useQuery } from "@apollo/client";
+import { queryCategory } from "../queries/QueryCategory";
+import Spinner from "../loaders/Spinner";
 
 const Category = () => {
   const { id } = useParams<{ id: string }>();
-  const api = useApi();
-  const [category, setCategory] = useState<CategoryType | null>(null);
-  const [totalPrice, setTotalPrice] = useState(0);
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const result = await api.get<CategoryType>(`/categories/${id}`);
-        setCategory(result.data);
-      } catch (error) {
-        console.error("Error fetching ad:", error);
-      }
-    };
-    fetchCategory();
-  }, [api, id]);
-
-  if (!category) {
+  const { data, error, loading } = useQuery<{ category: CategoryType }>(
+    queryCategory,
+    { variables: { categoryId: id } }
+  );
+  const category = data?.category;
+  if (error) {
     return (
-      <div className="loader-container">
-        <span className="loader"></span>
+      <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg mt-40">
+        Error : {error.message}
+      </p>
+    );
+  }
+
+  if (category === null) {
+    return (
+      <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg mt-40">
+        OUPS ! Désolé rien trouvé...
+      </p>
+    );
+  }
+
+  if (loading && category === undefined) {
+    return (
+      <div className="fixed left-0 right-0 top-0 bottom-0 flex justify-center items-center z-10">
+        <Spinner />
       </div>
     );
   }
   return (
-    <>
-      <div>
-        <h1 style={{ paddingBottom: "2rem" }}>{category.name}</h1>
-      </div>
-      <section className="recent-ads">
-        {category.ads.map((ad) => (
-          <AdCard
-            key={ad.id}
-            ad={ad}
-            onAddToCart={() => setTotalPrice(totalPrice + ad.price)}
-          />
+    <div className=" mt-28">
+      <h1 className=" font-bold text-4xl mb-8 text-primary">
+        {category?.name}
+      </h1>
+
+      <section className=" grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-4  xl:grid-cols-6 gap-4">
+        {category?.ads.map((ad) => (
+          <AdCard key={ad.id} ad={ad} />
         ))}
-        {totalPrice >= 0 && <Cart showPrice={totalPrice} />}
       </section>
-    </>
+    </div>
   );
 };
 
