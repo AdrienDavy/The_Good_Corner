@@ -115,6 +115,11 @@ const AdEditor = () => {
         });
         navigate(`/ads/${data?.updateAd.id}`, { replace: true });
       } else {
+        if (fieldErrors && title === "") {
+          setFieldErrors(() => ({
+            title: `${fieldErrors.title}`,
+          }));
+        }
         if (!categoryId) {
           setFieldErrors(() => ({
             category: "Une catégorie doit être sélectionnée.",
@@ -171,6 +176,7 @@ const AdEditor = () => {
       {fieldErrors.title && (
         <p className="text-red-500 text-sm mt-1">{fieldErrors.title}</p>
       )}
+
       <label className=" w-full">
         <textarea
           className=" w-full py-2 px-1 border-2 border-primary rounded-lg "

@@ -17,6 +17,8 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [tagItem, setTagItem] = useState("");
+  console.log(tagItem);
 
   const isAnimating = useClickOutside(
     dropdownRef,
@@ -76,13 +78,26 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
         {(isOpen || isAnimating) && (
           <div
             className={`${
-              isAnimating ? " opacity-0 h-20" : "opacity-100 h-40"
+              isAnimating ? " opacity-0 h-20" : "opacity-100 h-60"
             }  absolute top-full left-0 overflow-y-scroll w-full border-2 border-primary rounded-md bg-white z-10 duration-300 ease-in-out`}
           >
             <ul onClick={(e) => e.stopPropagation()}>
-              {pushTags()}
+              <input
+                className=" focus:bg-gray-100  focus:border-primary w-full shadow-2xl  text-primary p-2 overflow-y-scroll top-full flex-col flex justify-start bg-light custom-scrollbar transition-all duration-300 ease-in-out"
+                type="text"
+                placeholder="Rechercher un tag..."
+                value={tagItem}
+                onChange={(e) => setTagItem(e.target.value)}
+              />
+
+              <div>
+                <h2>Tags sélectionnés :</h2>
+                {pushTags()}
+              </div>
+
               {[...(tagsData ?? [])]
                 .sort((a, b) => a.name.localeCompare(b.name))
+                .filter((tag) => tag.name.includes(tagItem))
                 .map((tag) => (
                   <li
                     key={tag.id}
