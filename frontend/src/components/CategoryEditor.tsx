@@ -14,7 +14,7 @@ const CategoryEditor = () => {
   const [categoryName, setCategoryName] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
-  const [fieldErrors, setFieldErrors] = useState<string[]>([]);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const { data: categoriesData } = useQuery(queryCategories, { skip: !isOpen });
   const categories = categoriesData?.categories;
@@ -46,23 +46,6 @@ const CategoryEditor = () => {
   );
 
   const handleSubmit = async () => {
-    // if (
-    //   createCatError &&
-    //   createCatError.graphQLErrors?.[0]?.extensions?.validationErrors
-    // ) {
-    //   const validationErrors =
-    //     createCatError.graphQLErrors[0].extensions.validationErrors;
-
-    //   // Extraire les messages de chaque erreur de validation
-    //   const errors = await validationErrors.map((error) =>
-    //     Object.values(error.constraints || {})
-    //   );
-
-    //   if (errors.length > 0) {
-    //     setFieldErrors(errors);
-    //   }
-    // }
-
     try {
       await doCreateCategory({
         variables: {
@@ -79,10 +62,13 @@ const CategoryEditor = () => {
       });
 
       setCategoryName("");
-      setFieldErrors([]);
     } catch (err) {
       console.error("Erreur lors de la création :", err);
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCategoryName(e.target.value);
   };
 
   const handleDelete = async () => {
@@ -99,9 +85,7 @@ const CategoryEditor = () => {
           position: "top-right",
         });
       } else {
-        setFieldErrors({
-          ...fieldErrors,
-        });
+        setFieldErrors(fieldErrors);
       }
     } catch (err) {
       console.error(err);
@@ -131,23 +115,15 @@ const CategoryEditor = () => {
         <div className="pb-2 bg-gray-100">
           <input
             className={`${
-              fieldErrors.length > 0 ? "border-red-500" : "border-none"
+              fieldErrors ? "border-red-500" : "border-none"
             } w-full h-10 bg-light border-2 rounded-lg`}
             type="text"
             value={categoryName}
             placeholder="Nouvelle catégorie"
-            onChange={(e) => setCategoryName(e.target.value)}
+            onChange={handleChange}
           />
           {createCatError && (
-            <div className="text-red-500 text-sm">
-              {fieldErrors.length > 0 && (
-                <ul>
-                  {fieldErrors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
+            <div className="text-red-500 text-sm">Mauvaise entrée</div>
           )}
         </div>
 
@@ -166,9 +142,7 @@ const CategoryEditor = () => {
           defaultOption="Sélectionner une catégorie"
           optionError={fieldErrors}
         />
-        {fieldErrors && !categoryId && (
-          <p className="text-red-500 py-2">{fieldErrors}</p>
-        )}
+
         <button
           className="button mt-2"
           onClick={(e) => {

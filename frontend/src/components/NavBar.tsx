@@ -7,18 +7,13 @@ import { CategoryType } from "../types";
 import CategoriesLoader from "../loaders/NavBar/CategoriesLoader";
 
 const NavBar = () => {
-  const { data, error, loading } = useQuery<{ categories: CategoryType[] }>(
+  const { data, loading } = useQuery<{ categories: CategoryType[] }>(
     queryCategories
   );
   const categories = data?.categories;
 
   return (
     <>
-      {error && (
-        <p className=" text-red-500 font-bold text-2xl bg-primary p-4 rounded-lg">
-          Error : {error.message}
-        </p>
-      )}
       <nav className="main-menu">
         <h1>
           <Link to="/" className="button logo link-button">

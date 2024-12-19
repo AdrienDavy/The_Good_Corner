@@ -12,7 +12,7 @@ export class Category extends BaseEntity {
 
     @Column()
     @Length(3, 100, { message: "Title must be between 3 and 100 chars" })
-    @Matches(/^[A-Z][a-z]+(?:\s[A-Z][a-z]+)*$/, { message: "Words must start in capital letter and must not contain digits" })
+    @Matches(/^[A-ZÀ-Ö][a-zà-ö]+(?:\s(?:[a-zà-ö]+|[A-ZÀ-Ö][a-zà-ö]+))*$/, { message: "Words must start in capital letter and must not contain digits" })
     @Field()
     name!: string;
 
@@ -25,7 +25,7 @@ export class Category extends BaseEntity {
 export class CategoryCreateInput {
     @IsNotEmpty({ message: "Category is required" })
     @Length(3, 100, { message: "Title must be between 3 and 100 chars" })
-    @Matches(/^[A-Z][a-z]+(?:\s[A-Z][a-z]+)*$/, { message: "Words must start in capital letter and must not contain digits" })
+    @Matches(/^[A-ZÀ-Ö][a-zà-ö]+(?:\s(?:[a-zà-ö]+|[A-ZÀ-Ö][a-zà-ö]+))*$/, { message: "Words must start in capital letter and must not contain digits" })
     @Field()
     name!: string;
 }
@@ -34,7 +34,7 @@ export class CategoryCreateInput {
 export class CategoryUpdateInput {
     @IsNotEmpty({ message: "Category is required" })
     @Length(3, 100, { message: "Title must be between 3 and 100 chars" })
-    @Matches(/^[A-Z][a-z]+(?:\s[A-Z][a-z]+)*$/, { message: "Words must start in capital letter and must not contain digits" })
+    @Matches(/^[A-ZÀ-Ö][a-zà-ö]+(?:\s(?:[a-zà-ö]+|[A-ZÀ-Ö][a-zà-ö]+))*$/, { message: "Words must start in capital letter and must not contain digits" })
     @Field({ nullable: true })
     name!: string;
 }

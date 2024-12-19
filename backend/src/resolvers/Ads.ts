@@ -1,30 +1,26 @@
-import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput } from "../entities/Ad";
 import { number } from "joi";
 import { merge } from "../utils/merge";
 import { validate } from "class-validator";
+import { GraphQLResolveInfo } from "graphql";
+import { makeRelations } from "../utils/makeRelations";
 
 @Resolver()
 export class AdsResolver {
     @Query(() => [Ad])
-    async ads(): Promise<Ad[]> {
+    async ads(@Info() info: GraphQLResolveInfo): Promise<Ad[]> {
         const ads = await Ad.find({
             relations:
-            {
-                category: true,
-                tags: true
-            }
+                makeRelations(info, Ad)
         })
         return ads;
     }
 
     @Query(() => Ad, { nullable: true })
-    async ad(@Arg("id", () => ID) id: number): Promise<Ad | null> {
+    async ad(@Arg("id", () => ID) id: number, @Info() info: GraphQLResolveInfo): Promise<Ad | null> {
         const ad = await Ad.findOne({
-            where: { id }, relations: {
-                category: true,
-                tags: true
-            }
+            where: { id }, relations: makeRelations(info, Ad)
         })
         if (ad) {
             return ad
@@ -44,9 +40,10 @@ export class AdsResolver {
     @Mutation(() => Ad, { nullable: true })
     async updateAd(
         @Arg("id", () => ID) id: number,
+        @Info() info: GraphQLResolveInfo,
         @Arg("data", () => AdUpdateInput) data: AdUpdateInput
     ): Promise<Ad | null> {
-        const ad = await Ad.findOne({ where: { id }, relations: { tags: true } });
+        const ad = await Ad.findOne({ where: { id }, relations: makeRelations(info, Ad) });
         if (ad !== null) {
 
 

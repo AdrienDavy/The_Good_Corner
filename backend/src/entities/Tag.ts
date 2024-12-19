@@ -15,7 +15,7 @@ export class Tag extends BaseEntity {
     @Field()
     name!: string;
 
-    @ManyToMany(() => Ad, ad => ad.tags)
+    @ManyToMany(() => Ad, ad => ad.tags, { nullable: true })
     @Field(() => [Ad])
     ads!: Ad[];
 }

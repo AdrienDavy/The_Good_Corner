@@ -1,0 +1,32 @@
+services:
+    front:
+        build: ./frontend
+        ports:
+            - 5173:5173
+        volumes:
+            - ./frontend/index.html:/app/index.html
+            - ./frontend/src:/app/src
+            - ./frontend/public:/app/public
+            - ./frontend/vite.config.ts:/app/vite.config.ts
+    back:
+        build: ./backend
+        ports:
+            - 5000:5000
+        environment:
+            - CHOKIDAR_USEPOLLING=true
+        volumes:
+            - ./backend/src:/app/src
+    db:
+        image: postgres
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: supersecret
+            POSTGRES_USER: thegoodcorner
+            POSTGRES_DB: thegoodcorner
+        volumes:
+            - dbdata:/var/lib/postgresql/data
+
+volumes:
+    dbdata:
+        driver: local

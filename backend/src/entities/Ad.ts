@@ -36,7 +36,7 @@ export class Ad extends BaseEntity {
     @Field(() => Category)
     category!: Category;
 
-    @ManyToMany(() => Tag, (tag) => tag.ads)
+    @ManyToMany(() => Tag, (tag) => tag.ads, { nullable: true })
     @JoinTable()
     @Field(() => [Tag])
     tags!: Tag[];
