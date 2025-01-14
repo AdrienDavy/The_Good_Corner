@@ -17,15 +17,16 @@ services:
             - CHOKIDAR_USEPOLLING=true
         volumes:
             - ./backend/src:/app/src
+        env_file:
+            - database.env
+            - backend.env
 
     db:
         image: postgres
         ports:
             - 5432:5432
-        environment:
-            POSTGRES_PASSWORD: supersecret
-            POSTGRES_USER: thegoodcorner
-            POSTGRES_DB: thegoodcorner
+        env_file:
+            - database.env
         volumes:
             - dbdata:/var/lib/postgresql/data
 

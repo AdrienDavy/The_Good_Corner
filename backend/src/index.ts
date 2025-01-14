@@ -20,7 +20,14 @@ async function initiliaze() {
 
   const server = new ApolloServer({ schema });
 
-  const { url } = await startStandaloneServer(server, { listen: { port: 5000 } });
+  const { url } = await startStandaloneServer(server, {
+    listen: { port: 5000 }, context: async ({ req, res }) => {
+      return {
+        req,
+        res
+      }
+    }
+  });
   console.log(`GraphQL server ready at ${url}`);
 
 
