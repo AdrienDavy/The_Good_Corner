@@ -1,10 +1,9 @@
 import { Arg, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { Ad, AdCreateInput, AdUpdateInput } from "../entities/Ad";
-import { number } from "joi";
 import { merge } from "../utils/merge";
-import { validate } from "class-validator";
 import { GraphQLResolveInfo } from "graphql";
 import { makeRelations } from "../utils/makeRelations";
+import { validate } from "class-validator";
 
 @Resolver()
 export class AdsResolver {
@@ -47,7 +46,7 @@ export class AdsResolver {
         if (ad !== null) {
 
 
-            merge(ad, data);
+            makeRelations(info, Ad);
 
             const errors = await validate(ad);
 

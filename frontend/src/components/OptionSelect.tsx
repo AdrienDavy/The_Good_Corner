@@ -11,7 +11,6 @@ type OptionSelectProps = {
   onSelect: (option: OptionType) => void;
   actualOption: OptionType | null;
   defaultOption: string;
-  optionError: object | undefined;
 };
 
 const OptionSelect: React.FC<OptionSelectProps> = ({
@@ -19,7 +18,6 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
   onSelect,
   actualOption,
   defaultOption,
-  optionError,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<OptionType | null>(actualOption);
@@ -35,7 +33,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
     if (selected && !options?.some((option) => option.id === selected.id)) {
       setSelected(null); // Réinitialiser si l'option sélectionnée n'existe plus
     }
-  }, [options, selected, optionError]);
+  }, [options, selected]);
 
   const handleSelect = (option: OptionType) => {
     setSelected(option);
@@ -63,9 +61,7 @@ const OptionSelect: React.FC<OptionSelectProps> = ({
           isOpen
             ? "rounded-tl-lg rounded-tr-lg border-2 border-b-0"
             : " rounded-lg border-2"
-        } ${
-          !optionError && "border-red-500"
-        } border-primary text-primary text-sm cursor-pointer`}
+        }  border-primary text-primary text-sm cursor-pointer`}
       >
         {selected ? selected?.name : defaultOption}
         <span

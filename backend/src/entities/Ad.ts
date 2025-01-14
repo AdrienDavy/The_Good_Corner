@@ -23,7 +23,7 @@ import {
 import { Category } from "./Category";
 import { Tag } from "./Tag";
 import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
-import { IdInput } from "./Id";
+import { IdInput } from "./id";
 
 @Entity()
 @ObjectType()

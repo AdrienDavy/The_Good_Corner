@@ -227,7 +227,6 @@ const AdEditor = () => {
           onSelect={(category) => setCategoryId(category.id)}
           actualOption={isEditPage && ad?.category}
           defaultOption="Séléctionner une catégorie"
-          optionError={fieldErrors}
         />
 
         <ButtonTriggerModal id="modalCategory" title="Ajouter une catégorie">

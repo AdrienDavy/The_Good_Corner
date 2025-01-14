@@ -8,6 +8,7 @@ services:
             - ./frontend/src:/app/src
             - ./frontend/public:/app/public
             - ./frontend/vite.config.ts:/app/vite.config.ts
+
     back:
         build: ./backend
         ports:
@@ -16,6 +17,7 @@ services:
             - CHOKIDAR_USEPOLLING=true
         volumes:
             - ./backend/src:/app/src
+
     db:
         image: postgres
         ports:

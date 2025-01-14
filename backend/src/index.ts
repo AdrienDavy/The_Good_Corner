@@ -7,13 +7,14 @@ import { startStandaloneServer } from "@apollo/server/standalone";
 import { CategoriesResolver } from "./resolvers/Categories";
 import { AdsResolver } from "./resolvers/Ads";
 import { TagsResolver } from "./resolvers/Tags";
+import { UsersResolver } from "./resolvers/Users";
 
 async function initiliaze() {
   await datasource.initialize();
   console.log("Datasource is connected 🔌");
 
   const schema = await buildSchema({
-    resolvers: [AdsResolver, CategoriesResolver, TagsResolver],
+    resolvers: [UsersResolver, AdsResolver, CategoriesResolver, TagsResolver],
     validate: true
   })
 

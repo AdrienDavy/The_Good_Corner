@@ -137,6 +137,11 @@ const AdDetails: React.FC = () => {
                 Modifier l'offre
               </button>
             </div>
+            <ul className="flex">
+              {ad?.tags?.map((tag) => (
+                <li>{tag.name}</li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
