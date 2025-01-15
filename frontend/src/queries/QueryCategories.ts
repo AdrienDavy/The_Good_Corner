@@ -1,10 +1,11 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const queryCategories = gql`
+
+export const queryCategories = gql(`
 query Categories {
   categories {
     id
     name    
   }
 }
-`;
+`);

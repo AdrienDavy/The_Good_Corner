@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const queryCategory = gql`
+
+export const queryCategory = gql(`
 query QueryTag($tagId: ID!) { 
   tag(id: $tagId) {
     id
@@ -22,4 +23,4 @@ query QueryTag($tagId: ID!) {
   }
 }
 
-`;
+`);

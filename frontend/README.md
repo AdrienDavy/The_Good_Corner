@@ -49,5 +49,9 @@ export default tseslint.config({
 });
 ```
 
-Lancer le serveur de développement :
+Lancer codegen(frontend) :
+npx graphql-codegen --watch
+
+Lancer le serveur de développement(racine du projet) :
+
 docker compose up --build

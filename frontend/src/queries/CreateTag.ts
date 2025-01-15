@@ -1,9 +1,10 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const mutationCreateTag = gql`
+
+export const mutationCreateTag = gql(`
 mutation CreateTag($data: TagCreateInput!) {
   createTag(data: $data) {
     id
   }
 }
-`;
+`);

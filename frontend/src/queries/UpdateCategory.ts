@@ -1,9 +1,9 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const mutationUpdateCategory = gql`
+export const mutationUpdateCategory = gql(`
 mutation UpdateCategory($data: CategoryUpdateInput!, $id:ID!) {
   updateCategory(data: $data, id:$id) {
     id
   }
 }
-`;
+`);

@@ -1,8 +1,8 @@
-import { Arg, Ctx, ID, Info, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { User, UserCreateInput, UserUpdateInput } from "../entities/User";
 import { validate } from "class-validator";
 import argon2 from "argon2";
-import { sign, verify } from "jsonwebtoken";
+import { decode, sign, verify } from "jsonwebtoken";
 import Cookies from "cookies";
 
 @Resolver()
@@ -30,7 +30,7 @@ export class UsersResolver {
     async signin(
         @Arg("email") email: string,
         @Arg("password") password: string,
-        @Ctx() context: any)
+        @Ctx() context: { req: any, res: any })
         : Promise<User> {
         try {
             const user = await User.findOneBy({ email });
@@ -57,7 +57,6 @@ export class UsersResolver {
                         secure: false,
                         httpOnly: true,
                         maxAge: 1000 * 60 * 60 * 72, // 72 hours
-                        sameSite: "none"
                     });
 
                     return user;
@@ -117,6 +116,17 @@ export class UsersResolver {
         } else {
             return null;
         }
+    }
+
+
+    @Authorized()
+    @Query(() => User, { nullable: true })
+    async whoami(@Ctx() context: { req: any, res: any }) {
+        const cookies = new Cookies(context.req, context.res);
+        const token = cookies.get("token");
+        const payload = decode(token || "") as unknown as { id: number };
+        const user = await User.findOneBy({ id: payload.id });
+        return user;
     }
 
 }

@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const queryAd = gql`
+
+export const queryAd = gql(`
 query Ad($id: ID!) {
   ad(id: $id) {
     createdAt
@@ -21,4 +22,4 @@ query Ad($id: ID!) {
     }
   }
 }
-`;
+`);

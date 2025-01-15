@@ -1,6 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from "../gql";
 
-export const queryRecentAds = gql`
+
+export const queryRecentAds = gql(`
 query Ads{
   ads {
     id
@@ -10,4 +11,4 @@ query Ads{
     createdAt    
   }
 }
-`;
+`);
