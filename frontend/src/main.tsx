@@ -9,7 +9,8 @@ import Page404 from "./pages/Page404.tsx";
 import Category from "./pages/Category.tsx";
 import AdEditor from "./pages/AdEditor.tsx";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-
+import Signin from "./pages/Signin.tsx";
+import Signup from "./pages/Signup.tsx";
 
 const client = new ApolloClient({
   uri: "http://localhost:5000",
@@ -48,6 +49,14 @@ const router = createBrowserRouter([
       {
         path: `ads/:id/edit`,
         element: <AdEditor />,
+      },
+      {
+        path: `/signin`,
+        element: <Signin />,
+      },
+      {
+        path: `/signup`,
+        element: <Signup />,
       },
     ],
   },

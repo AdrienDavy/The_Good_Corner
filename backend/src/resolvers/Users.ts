@@ -4,6 +4,7 @@ import { validate } from "class-validator";
 import argon2 from "argon2";
 import { decode, sign, verify } from "jsonwebtoken";
 import Cookies from "cookies";
+import { ContextType, getUserFromContext } from "../auth";
 
 @Resolver()
 export class UsersResolver {
@@ -30,8 +31,8 @@ export class UsersResolver {
     async signin(
         @Arg("email") email: string,
         @Arg("password") password: string,
-        @Ctx() context: { req: any, res: any })
-        : Promise<User> {
+        @Ctx() context: ContextType)
+        : Promise<User | null> {
         try {
             const user = await User.findOneBy({ email });
             if (user) {
@@ -58,18 +59,16 @@ export class UsersResolver {
                         httpOnly: true,
                         maxAge: 1000 * 60 * 60 * 72, // 72 hours
                     });
-
                     return user;
                 } else {
-                    throw new Error("Invalid password");
+                    return null;
                 }
             } else {
-                throw new Error("User not found");
+                return null;
             }
-
-        } catch (error) {
-            console.error("Error creating user:", error);
-            throw new Error("Unable to sign in");
+        } catch (e) {
+            console.error(e);
+            throw new Error("unable to sign in");
         }
     }
 
@@ -119,14 +118,19 @@ export class UsersResolver {
     }
 
 
-    @Authorized()
+    // @Authorized()
     @Query(() => User, { nullable: true })
-    async whoami(@Ctx() context: { req: any, res: any }) {
+    async whoami(@Ctx() context: ContextType): Promise<User | null> {
+        return await getUserFromContext(context);
+
+    }
+
+
+    @Mutation(() => Boolean)
+    async signout(@Ctx() context: ContextType): Promise<boolean> {
         const cookies = new Cookies(context.req, context.res);
-        const token = cookies.get("token");
-        const payload = decode(token || "") as unknown as { id: number };
-        const user = await User.findOneBy({ id: payload.id });
-        return user;
+        cookies.set("token", "", { maxAge: 0 });
+        return true;
     }
 
 }
