@@ -27,7 +27,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
     400 // Durée de l'animation
   );
 
-  const { data: tagsDataFromQuery } = useQuery<{ tags: TagType[] }>(queryTags);
+  const { data: tagsDataFromQuery } = useQuery(queryTags);
   const tags = tagsDataFromQuery?.tags || tagsData;
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -44,7 +44,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
   const pushTags = () => {
     if (!dataIds || !tags) return null;
-    const selectedTags = tags.filter((tag) => dataIds.includes(tag.id));
+    const selectedTags = tags.filter((tag) => dataIds.includes(Number(tag.id)));
     return (
       <div className="mt-2">
         {selectedTags.length > 0 ? (

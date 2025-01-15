@@ -137,10 +137,10 @@ const CategoryEditor = () => {
 
         <OptionSelect
           options={categories}
-          onSelect={(category) => setCategoryId(category.id)}
+          onSelect={(category) => setCategoryId(Number(category.id))}
           actualOption={null}
           defaultOption="Sélectionner une catégorie"
-          optionError={fieldErrors}
+          // optionError={fieldErrors}
         />
 
         <button

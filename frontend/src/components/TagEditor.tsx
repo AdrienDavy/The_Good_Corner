@@ -117,8 +117,8 @@ const TagEditor = () => {
         )}
 
         <OptionSelect
-          options={tags}
-          onSelect={(tag) => setTagId(tag.id)}
+          options={tags ?? []}
+          onSelect={(tag) => setTagId(Number(tag.id))}
           actualOption={null}
           defaultOption="Sélectionner un tag"
         />

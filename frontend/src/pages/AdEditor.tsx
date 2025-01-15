@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import "./AdEditor.css";
-import { AdType, CategoryType, TagType } from "../types";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import OptionSelect from "../components/OptionSelect";
 import ButtonTriggerModal from "../components/ButtonTriggerModal";
@@ -36,42 +35,45 @@ const AdEditor = () => {
 
   // --------------------------------QUERIES------------------------------------------
 
-  const { data: categoriesData } = useQuery<{ categories: CategoryType[] }>(
-    queryCategories
-  );
+  const { data: categoriesData } = useQuery(queryCategories);
   const categories = categoriesData?.categories;
 
-  const { data: tagsData } = useQuery<{ tags: TagType[] }>(queryTags);
-  const tags = tagsData?.tags;
+  const { data: tagsData } = useQuery(queryTags);
+  const tags = tagsData?.tags ?? undefined;
 
-  const { data: adData } = useQuery(queryAd, { variables: { id }, skip: !id });
+  const { data: adData } = useQuery(queryAd, {
+    variables: { id: id ? id.toString() : "" },
+    skip: !id,
+  });
   const ad = adData?.ad;
 
-  const [doCreateAd, { loading: createLoading }] = useMutation<{
-    createAd: AdType;
-  }>(mutationCreateAd, {
-    refetchQueries: [queryAd],
-    onError: (error) => handleValidationErrors(error, setFieldErrors),
-  });
+  const [doCreateAd, { loading: createLoading }] = useMutation(
+    mutationCreateAd,
+    {
+      refetchQueries: [queryAd],
+      onError: (error) => handleValidationErrors(error, setFieldErrors),
+    }
+  );
 
-  const [doUpdateAd, { loading: updateLoading }] = useMutation<{
-    updateAd: AdType;
-  }>(mutationUpdateAd, { refetchQueries: [queryAd] });
+  const [doUpdateAd, { loading: updateLoading }] = useMutation(
+    mutationUpdateAd,
+    { refetchQueries: [queryAd] }
+  );
 
   // ----------------------------------------------------------------------------------
 
   useEffect(() => {
     if (ad && isEditPage) {
       setTitle(ad.title);
-      setDescription(ad.description);
+      setDescription(ad.description ?? "");
       setPrice(ad.price);
       setLocation(ad.location);
       setPicture(ad.picture);
       setOwner(ad.owner);
-      setCategoryId(ad.category?.id);
+      setCategoryId(ad.category ? Number(ad.category.id) : null);
       const tagsIds: number[] = [];
       for (const tag of ad.tags) {
-        tagsIds.push(tag.id);
+        tagsIds.push(Number(tag.id));
       }
       setTagIds(tagsIds);
     }
@@ -103,8 +105,8 @@ const AdEditor = () => {
               location,
               picture,
               owner,
-              category: categoryId ? { id: categoryId } : null,
-              tags: tagIds.map((id) => ({ id })),
+              category: categoryId ? { id: categoryId.toString() } : null,
+              tags: tagIds.map((id) => ({ id: id.toString() })),
             },
           },
         });
@@ -113,7 +115,9 @@ const AdEditor = () => {
           autoClose: 3000,
           position: "top-right",
         });
-        navigate(`/ads/${data?.updateAd.id}`, { replace: true });
+        if (data?.updateAd) {
+          navigate(`/ads/${data.updateAd.id}`, { replace: true });
+        }
       } else {
         if (fieldErrors && title === "") {
           setFieldErrors(() => ({
@@ -140,8 +144,8 @@ const AdEditor = () => {
               location,
               picture,
               owner,
-              category: { id: categoryId },
-              tags: tagIds.map((id) => ({ id })),
+              category: { id: categoryId.toString() },
+              tags: tagIds.map((id) => ({ id: id.toString() })),
             },
           },
         });
@@ -224,8 +228,8 @@ const AdEditor = () => {
       <div className="flex">
         <OptionSelect
           options={categories}
-          onSelect={(category) => setCategoryId(category.id)}
-          actualOption={isEditPage && ad?.category}
+          onSelect={(category) => setCategoryId(Number(category.id))}
+          actualOption={isEditPage && ad?.category ? ad.category : null}
           defaultOption="Séléctionner une catégorie"
         />
 
@@ -237,7 +241,11 @@ const AdEditor = () => {
         <p className="text-red-500 text-sm">{fieldErrors.category}</p>
       )}
       <div className="flex">
-        <MultiSelect dataIds={tagIds} setDataIds={setTagIds} tagsData={tags} />
+        <MultiSelect
+          dataIds={tagIds}
+          setDataIds={setTagIds}
+          tagsData={tags?.map(tag => ({ ...tag, id: Number(tag.id) }))}
+        />
         <ButtonTriggerModal id="modalTag" title="Ajouter un tag">
           <TagEditor />
         </ButtonTriggerModal>

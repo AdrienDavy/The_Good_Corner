@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import "./AdCard.css";
 import Cart from "../assets/cart.svg";
-import { AdType } from "../types";
 import formatDateTime from "../services/formatDateTime";
 
 type Props = {
-  ad: AdType;
+  ad: {
+    __typename?: "Ad";
+    id: string;
+    picture: string;
+    title: string;
+    price: number;
+    createdAt: string;
+  };
 };
 
 const onAddToCart = () => {

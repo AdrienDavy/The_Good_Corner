@@ -3,13 +3,10 @@ import "./Header.css";
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { queryCategories } from "../queries/QueryCategories";
-import { CategoryType } from "../types";
 import CategoriesLoader from "../loaders/NavBar/CategoriesLoader";
 
 const NavBar = () => {
-  const { data, loading } = useQuery<{ categories: CategoryType[] }>(
-    queryCategories
-  );
+  const { data, loading } = useQuery(queryCategories);
   const categories = data?.categories;
 
   return (

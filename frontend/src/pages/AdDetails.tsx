@@ -10,11 +10,11 @@ import Spinner from "../loaders/Spinner";
 
 const AdDetails: React.FC = () => {
   const navigate = useNavigate();
-  const params = useParams<{ id: string }>();
-  const id = Number(params.id);
+  const params = useParams<{ id: string | undefined }>();
+  const id = params.id;
 
-  const { data, loading, error } = useQuery<{ ad: AdType }>(queryAd, {
-    variables: { id },
+  const { data, loading, error } = useQuery(queryAd, {
+    variables: { id: id || "" },
   });
 
   const ad = data?.ad;

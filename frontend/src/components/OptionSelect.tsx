@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useClickOutside from "../hooks/useClickOutside";
 
 type OptionType = {
-  id: number;
+  id: string;
   name: string;
 };
 

@@ -1,6 +1,5 @@
 import AdCard from "../components/AdCard";
 import { useParams } from "react-router-dom";
-import { CategoryType } from "../types";
 import { useQuery } from "@apollo/client";
 import { queryCategory } from "../queries/QueryCategory";
 import Spinner from "../loaders/Spinner";
@@ -8,10 +7,9 @@ import Spinner from "../loaders/Spinner";
 const Category = () => {
   const { id } = useParams<{ id: string }>();
 
-  const { data, error, loading } = useQuery<{ category: CategoryType }>(
-    queryCategory,
-    { variables: { categoryId: id } }
-  );
+  const { data, error, loading } = useQuery(queryCategory, {
+    variables: { categoryId: id ?? "" },
+  });
   const category = data?.category;
   if (error) {
     return (

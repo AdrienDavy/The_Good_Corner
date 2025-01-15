@@ -1,11 +1,10 @@
 import AdCard from "./AdCard";
-import { AdType } from "../types";
 import { useQuery } from "@apollo/client";
 import { queryRecentAds } from "../queries/QueryAds";
 import Spinner from "../loaders/Spinner";
 
 const RecentAds = () => {
-  const { data, error, loading } = useQuery<{ ads: AdType[] }>(queryRecentAds, {
+  const { data, error, loading } = useQuery(queryRecentAds, {
     fetchPolicy: "cache-and-network",
   });
   const ads = data?.ads;
