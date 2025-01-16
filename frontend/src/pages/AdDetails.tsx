@@ -7,6 +7,7 @@ import { queryAd } from "../queries/QueryAd";
 import { mutationDeleteAd } from "../queries/DeleteAd";
 import { toast } from "react-toastify";
 import Spinner from "../loaders/Spinner";
+import { queryWhoAmI } from "../queries/WhoAmI";
 
 const AdDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +19,8 @@ const AdDetails: React.FC = () => {
   });
 
   const ad = data?.ad;
-
+  const { data: whoAmIData } = useQuery(queryWhoAmI);
+  const me = whoAmIData?.whoami;
   const [doDeleteAd, { loading: deleteAdLoading }] = useMutation<{
     deleteAd: AdType;
   }>(mutationDeleteAd);
@@ -123,25 +125,24 @@ const AdDetails: React.FC = () => {
               <button className="button mb-2 ad-card-button-hover">
                 Buy Now
               </button>
-              <button
-                className="button mb-2 ad-card-button-hover "
-                onClick={handleDelete}
-              >
-                Supprimer l'offre
-              </button>
-              {deleteAdLoading && <p>Suppression...</p>}
-              <button
-                className="button ad-card-button-hover"
-                onClick={handleUpdate}
-              >
-                Modifier l'offre
-              </button>
+              {me && (
+                <div className="flex flex-col w-full">
+                  <button
+                    className="button mb-2 ad-card-button-hover "
+                    onClick={handleDelete}
+                  >
+                    Supprimer l'offre
+                  </button>
+                  {deleteAdLoading && <p>Suppression...</p>}
+                  <button
+                    className="button ad-card-button-hover"
+                    onClick={handleUpdate}
+                  >
+                    Modifier l'offre
+                  </button>
+                </div>
+              )}
             </div>
-            <ul className="flex">
-              {ad?.tags?.map((tag) => (
-                <li>{tag.name}</li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>

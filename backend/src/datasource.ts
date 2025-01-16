@@ -9,5 +9,5 @@ export const datasource = new DataSource({
     database: "thegoodcorner",
     entities: ["./src/entities/*.ts"],
     synchronize: true,
-    logging: true,
+    logging: true
 });

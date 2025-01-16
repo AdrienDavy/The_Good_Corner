@@ -87,17 +87,14 @@ export class AdCreateInput {
     @Field(() => IdInput)
     category!: IdInput;
 
-    @IsArray({ message: "Tags must be an array" }) // Validation pour le tableau de tags
-    @Field(() => [IdInput])
+    @Field(() => [IdInput], { nullable: true })
     tags!: IdInput[];
 
     @IsNotEmpty({ message: "Title is required" })
-    @Length(3, 100, { message: "Title must be between 10 and 100 characters" })
     @Field()
     title!: string;
 
     @IsNotEmpty({ message: "Description is required" })
-    @Length(20, 1000, { message: "Description must be between 20 and 1000 characters" })
     @Field({ nullable: true })
     description!: string;
 
@@ -129,17 +126,14 @@ export class AdUpdateInput {
     @Field(() => IdInput, { nullable: true })
     category!: IdInput;
 
-    @IsArray({ message: "Tags must be an array" }) // Validation pour le tableau de tags
     @Field(() => [IdInput], { nullable: true })
     tags!: IdInput[];
 
     @IsNotEmpty({ message: "Title is required" })
-    @Length(3, 100, { message: "Title must be between 10 and 100 characters" })
     @Field({ nullable: true })
     title!: string;
 
     @IsNotEmpty({ message: "Description is required" })
-    @Length(20, 1000, { message: "Description must be between 20 and 1000 characters" })
     @Field({ nullable: true })
     description!: string;
 

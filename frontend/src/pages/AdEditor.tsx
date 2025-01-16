@@ -30,6 +30,7 @@ const AdEditor = () => {
   const [owner, setOwner] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tagIds, setTagIds] = useState<number[]>([]);
+  console.log("tagIds", tagIds);
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -86,13 +87,14 @@ const AdEditor = () => {
       setPrice(0);
       setLocation("");
       setPicture("");
-      setOwner("");
+      setOwner("adri@mail.com");
       setCategoryId(null);
       setTagIds([]);
     }
   }, [locationPathname]);
 
   const handleSubmit = async () => {
+    const tagIdsArray = [...tagIds];
     try {
       if (ad) {
         const { data } = await doUpdateAd({
@@ -106,7 +108,7 @@ const AdEditor = () => {
               picture,
               owner,
               category: categoryId ? { id: categoryId.toString() } : null,
-              tags: tagIds.map((id) => ({ id: id.toString() })),
+              tags: tagIdsArray.map((id) => ({ id: id.toString() })),
             },
           },
         });
@@ -116,6 +118,8 @@ const AdEditor = () => {
           position: "top-right",
         });
         if (data?.updateAd) {
+          console.log("datas modified", data);
+
           navigate(`/ads/${data.updateAd.id}`, { replace: true });
         }
       } else {
@@ -234,7 +238,13 @@ const AdEditor = () => {
         />
 
         <ButtonTriggerModal id="modalCategory" title="Ajouter une catégorie">
-          <CategoryEditor />
+          <div
+            // ref={ModalRef}
+            className=" shadow-2xl shadow-gray-500 fixed flex flex-col bg-gray-100 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 z-20 w-80 min-w-60 border-primary border-2 rounded-xl p-2"
+            // onClick={(e) => e.stopPropagation()}
+          >
+            <CategoryEditor />
+          </div>
         </ButtonTriggerModal>
       </div>
       {fieldErrors.category && !categoryId && (
@@ -244,10 +254,16 @@ const AdEditor = () => {
         <MultiSelect
           dataIds={tagIds}
           setDataIds={setTagIds}
-          tagsData={tags?.map(tag => ({ ...tag, id: Number(tag.id) }))}
+          tagsData={tags?.map((tag) => ({ ...tag, id: Number(tag.id) }))}
         />
         <ButtonTriggerModal id="modalTag" title="Ajouter un tag">
-          <TagEditor />
+          <div
+            // ref={ModalRef}
+            className=" shadow-2xl shadow-gray-500 fixed flex flex-col bg-gray-100 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 z-20 w-80 min-w-60 border-primary border-2 rounded-xl p-2"
+            // onClick={(e) => e.stopPropagation()}
+          >
+            <TagEditor />
+          </div>
         </ButtonTriggerModal>
       </div>
       <button className="button" onClick={handleSubmit}>

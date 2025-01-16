@@ -11,10 +11,12 @@ import AdEditor from "./pages/AdEditor.tsx";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import Signin from "./pages/Signin.tsx";
 import Signup from "./pages/Signup.tsx";
+import Create from "./pages/Create.tsx";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000",
+  uri: "/api",
   cache: new InMemoryCache(),
+  credentials: "same-origin",
 });
 
 const router = createBrowserRouter([
@@ -25,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/create",
+        element: <Create />,
       },
       // {
       //   path: "*",

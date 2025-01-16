@@ -6,5 +6,4 @@ mutation Signin($email: String!, $password: String! ) {
     id
     email
   }
-}
-  `);
+}`);

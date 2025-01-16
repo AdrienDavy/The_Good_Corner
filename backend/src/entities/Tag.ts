@@ -24,7 +24,7 @@ export class Tag extends BaseEntity {
 @InputType()
 export class TagCreateInput {
     @Matches(/^[a-z]+$/, { message: "One word and lowercase letters only" })
-    @Field()
+    @Field({ nullable: true })
     name!: string;
 }
 

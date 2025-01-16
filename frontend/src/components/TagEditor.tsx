@@ -1,12 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { mutationCreateTag } from "../queries/CreateTag";
 import { TagType } from "../types";
 import { queryTags } from "../queries/QueryTags";
 import { toast } from "react-toastify";
 import { mutationDeleteTag } from "../queries/DeleteTag";
 import OptionSelect from "./OptionSelect";
-import useClickOutside from "../hooks/useClickOutside";
+// import useClickOutside from "../hooks/useClickOutside";
 
 const TagEditor = () => {
   const [tagId, setTagId] = useState<number | null>(null);
@@ -29,13 +29,13 @@ const TagEditor = () => {
       refetchQueries: [{ query: queryTags }],
     });
 
-  const ModalRef = useRef(null);
-  useClickOutside(
-    ModalRef,
-    () => setIsOpen(false),
-    isOpen,
-    300 // Durée de l'animation
-  );
+  // const ModalRef = useRef(null);
+  // useClickOutside(
+  //   ModalRef,
+  //   () => setIsOpen(false),
+  //   isOpen,
+  //   300 // Durée de l'animation
+  // );
 
   const handleSubmit = async () => {
     try {
@@ -79,11 +79,7 @@ const TagEditor = () => {
   return (
     isOpen && (
       // <div className="fixed w-full h-full top-0 left-0 backdrop-blur-[2px] bg-gradient-to-br from-[rgba(242,225,183,0.2)] to-[rgba(228,202,135,0.4)] ">
-      <div
-        ref={ModalRef}
-        className=" shadow-2xl shadow-gray-500 fixed flex flex-col bg-gray-100 right-1/2 translate-x-1/2 top-1/2 -translate-y-1/2 z-20 w-80 min-w-60 border-primary border-2 rounded-xl p-2"
-        // onClick={(e) => e.stopPropagation()}
-      >
+      <div className="bg-white p-8 rounded-xl shadow-xl border-2 border-yellow-400">
         <div className="z-50 w-full h-full flex justify-end pb-2">
           <svg
             onClick={() => setIsOpen(false)}
@@ -115,7 +111,6 @@ const TagEditor = () => {
         {createTagError && (
           <p className="text-red-500 py-2">Erreur : {createTagError.message}</p>
         )}
-
         <OptionSelect
           options={tags ?? []}
           onSelect={(tag) => setTagId(Number(tag.id))}

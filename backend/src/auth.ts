@@ -44,11 +44,10 @@ export const authChecker: AuthChecker<ContextType> = async (
 ) => {
     const user = await getUserFromContext(context);
     context.user = user;
-    return !!user;
-    //équivaut à
-    // if (user) {
-    //     return true;
-    // } else {
-    //     return false;
-    // }
+
+    if (user) {
+        return true;
+    } else {
+        return false;
+    }
 };

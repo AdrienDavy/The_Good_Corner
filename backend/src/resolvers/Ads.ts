@@ -22,15 +22,13 @@ export class AdsResolver {
 
     @Query(() => Ad, { nullable: true })
     async ad(@Arg("id", () => ID) id: number, @Info() info: GraphQLResolveInfo): Promise<Ad | null> {
-        const ad = await Ad.findOne({
-            where: { id }, relations: makeRelations(info, Ad)
-        })
-        if (ad) {
-            return ad
-        } else {
-            return null;
+        if (!id) {
+            throw new Error("L'ID est requis pour récupérer une annonce.");
         }
+        const ad = await Ad.findOne({ where: { id }, relations: makeRelations(info, Ad) });
+        return ad ?? null;
     }
+
 
     @Authorized()
     @Mutation(() => Ad)
@@ -38,10 +36,14 @@ export class AdsResolver {
         @Arg("data", () => AdCreateInput) data: AdCreateInput,
         @Ctx() context: ContextType
     ): Promise<Ad> {
+        const errors = await validate(data);
+        if (errors.length > 0) {
+            throw new Error(`Validation error: ${JSON.stringify(errors)}`);
+        }
         const newAd = new Ad();
-        const user = context.user;
-        Object.assign(newAd, data, { createdBy: user });
-        await newAd.save()
+        Object.assign(newAd, data, { createdBy: context.user });
+
+        await newAd.save();
         return newAd;
     }
 
@@ -49,28 +51,33 @@ export class AdsResolver {
     @Mutation(() => Ad, { nullable: true })
     async updateAd(
         @Arg("id", () => ID) id: number,
-        @Info() info: GraphQLResolveInfo,
         @Arg("data", () => AdUpdateInput) data: AdUpdateInput,
-        @Ctx() context: ContextType
+        @Ctx() context: ContextType,
+        @Info() info: GraphQLResolveInfo
     ): Promise<Ad | null> {
-        const ad = await Ad.findOne({ where: { id, createdBy: { id: context.user?.id } }, relations: makeRelations(info, Ad) });
-        if (ad !== null) {
-
-
-            makeRelations(info, Ad);
-
-            const errors = await validate(ad);
-
-            if (errors.length > 0) {
-                throw new Error(`Validation error: ${JSON.stringify(errors)}`);
-            } else {
-                await ad.save();
-                return ad;
-            }
-        } else {
-            return null;
+        if (!id) {
+            throw new Error("L'ID de l'annonce est requis pour la mise à jour.");
         }
+
+        const ad = await Ad.findOne({
+            where: { id, createdBy: { id: context.user?.id } },
+            relations: makeRelations(info, Ad),
+        });
+
+        if (!ad) {
+            throw new Error("Annonce non trouvée ou accès non autorisé.");
+        }
+
+        Object.assign(ad, data);
+        const errors = await validate(ad);
+        if (errors.length > 0) {
+            throw new Error(`Validation error: ${JSON.stringify(errors)}`);
+        }
+
+        await ad.save();
+        return ad;
     }
+
 
     @Authorized()
     @Mutation(() => Ad, { nullable: true })

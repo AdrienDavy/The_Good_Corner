@@ -1,13 +1,30 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import React from "react";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { queryCategories } from "../queries/QueryCategories";
 import CategoriesLoader from "../loaders/NavBar/CategoriesLoader";
+import { queryWhoAmI } from "../queries/WhoAmI";
+import { mutationSignout } from "../queries/Signout";
 
 const NavBar = () => {
-  const { data, loading } = useQuery(queryCategories);
-  const categories = data?.categories;
+  const { data: categoriesdatas, loading } = useQuery(queryCategories);
+  const categories = categoriesdatas?.categories;
+  const navigate = useNavigate();
+
+  const { data: whoAmIData } = useQuery(queryWhoAmI);
+  const me = whoAmIData?.whoami;
+
+  // Utilisation de la mutation signout
+  const [doSignout] = useMutation(mutationSignout, {
+    refetchQueries: [queryWhoAmI],
+  });
+
+  const handleSignout = () => {
+    doSignout();
+    navigate("/signin");
+  };
+  console.log("me => ", me);
 
   return (
     <>
@@ -36,16 +53,33 @@ const NavBar = () => {
             </svg>
           </button>
         </form>
-        {/* <Link to="/ads/new" className="button link-button">
-          <span className="mobile-short-label">Publier</span>
-          <span className="desktop-long-label">Publier une annonce</span>
-        </Link> */}
-        <Link to="/signin" className="button link-button">
-          Connexion
-        </Link>
-        <Link to="/signup" className="button link-button">
-          Inscription
-        </Link>
+        {me ? (
+          <>
+            <Link to="/create" className="button link-button">
+              Création
+            </Link>
+            <Link to="/ads/new" className="button link-button">
+              <span className="mobile-short-label">Publier</span>
+              <span className="desktop-long-label">Publier une annonce</span>
+            </Link>
+            <button
+              type="button"
+              className="button link-button"
+              onClick={handleSignout}
+            >
+              Déconnexion
+            </button>
+          </>
+        ) : me === null ? (
+          <>
+            <Link to="/signin" className="button link-button">
+              Connexion
+            </Link>
+            <Link to="/signup" className="button link-button">
+              Inscription
+            </Link>
+          </>
+        ) : null}
       </nav>
       <nav className="categories-navigation">
         {loading === true && categories === undefined && <CategoriesLoader />}

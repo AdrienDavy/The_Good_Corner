@@ -44,7 +44,9 @@ const AdCard = ({ ad }: Props) => {
           Ajouter au panier <img width={16} height={16} src={Cart} alt="" />
         </button>
       </div>
-      <div className="ad-card-price">{formatDateTime(ad.createdAt)}</div>
+      <div className=" text-xs p-1 text-yellow-500">
+        {formatDateTime(ad.createdAt)}
+      </div>
     </div>
   );
 };

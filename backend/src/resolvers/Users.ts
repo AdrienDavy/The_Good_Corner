@@ -59,6 +59,8 @@ export class UsersResolver {
                         httpOnly: true,
                         maxAge: 1000 * 60 * 60 * 72, // 72 hours
                     });
+                    console.log("cookies", cookies.get("token"));
+
                     return user;
                 } else {
                     return null;
@@ -68,7 +70,7 @@ export class UsersResolver {
             }
         } catch (e) {
             console.error(e);
-            throw new Error("unable to sign in");
+            return null;
         }
     }
 
@@ -122,7 +124,6 @@ export class UsersResolver {
     @Query(() => User, { nullable: true })
     async whoami(@Ctx() context: ContextType): Promise<User | null> {
         return await getUserFromContext(context);
-
     }
 
 
