@@ -19,6 +19,10 @@ query Category($categoryId: ID!) {
         id
         name
       }
+      category {
+        id
+        name
+      }
     }
   }
 }

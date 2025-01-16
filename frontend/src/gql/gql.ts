@@ -22,9 +22,9 @@ const documents = {
     "\nmutation DeleteCategory($id: ID!) {\n  deleteCategory(id: $id) {\n    id\n  }\n}\n": types.DeleteCategoryDocument,
     "\nmutation DeleteTag($id: ID!) {\n  deleteTag(id: $id) {\n    id\n  }\n}\n": types.DeleteTagDocument,
     "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    owner\n    picture\n    price\n    title\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n": types.AdDocument,
-    "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt    \n  }\n}\n": types.AdsDocument,
+    "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    owner\n    createdAt\n    category {\n      id\n      name\n    }\n  }\n}\n": types.AdsDocument,
     "\nquery Categories {\n  categories {\n    id\n    name    \n  }\n}\n": types.CategoriesDocument,
-    "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n    }\n  }\n}\n": types.CategoryDocument,
+    "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n": types.CategoryDocument,
     "\nquery QueryTag($tagId: ID!) { \n  tag(id: $tagId) {\n    id\n    name\n    ads {\n      title\n      price\n      picture\n      owner\n      location\n      id\n      description\n      createdAt\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n\n": types.QueryTagDocument,
     "\nquery Tags {\n  tags {\n    id\n    name    \n  }\n}\n": types.TagsDocument,
     "\nmutation Signin($email: String!, $password: String! ) {\n  signin(email: $email, password: $password) {\n    id\n    email\n  }\n}": types.SigninDocument,
@@ -84,7 +84,7 @@ export function gql(source: "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    create
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt    \n  }\n}\n"): (typeof documents)["\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt    \n  }\n}\n"];
+export function gql(source: "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    owner\n    createdAt\n    category {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    owner\n    createdAt\n    category {\n      id\n      name\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -92,7 +92,7 @@ export function gql(source: "\nquery Categories {\n  categories {\n    id\n    n
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n    }\n  }\n}\n"): (typeof documents)["\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n    }\n  }\n}\n"];
+export function gql(source: "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n"): (typeof documents)["\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

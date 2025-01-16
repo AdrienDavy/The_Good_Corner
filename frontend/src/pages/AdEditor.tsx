@@ -14,6 +14,7 @@ import MultiSelect from "../components/MultiSelect";
 import TagEditor from "../components/TagEditor";
 import { toast } from "react-toastify";
 import { handleValidationErrors } from "../utils/handleValidationErrors";
+import { queryWhoAmI } from "../queries/WhoAmI";
 
 const AdEditor = () => {
   const navigate = useNavigate();
@@ -47,6 +48,9 @@ const AdEditor = () => {
     skip: !id,
   });
   const ad = adData?.ad;
+
+  const { data: whoAmIData } = useQuery(queryWhoAmI);
+  const me = whoAmIData?.whoami;
 
   const [doCreateAd, { loading: createLoading }] = useMutation(
     mutationCreateAd,
@@ -87,11 +91,11 @@ const AdEditor = () => {
       setPrice(0);
       setLocation("");
       setPicture("");
-      setOwner("adri@mail.com");
+      setOwner(me?.email ?? "");
       setCategoryId(null);
       setTagIds([]);
     }
-  }, [locationPathname]);
+  }, [locationPathname, me]);
 
   const handleSubmit = async () => {
     const tagIdsArray = [...tagIds];

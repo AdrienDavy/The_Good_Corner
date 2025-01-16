@@ -8,7 +8,12 @@ query Ads{
     picture
     title
     price
-    createdAt    
+    owner
+    createdAt
+    category {
+      id
+      name
+    }
   }
 }
 `);

@@ -12,12 +12,17 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import Signin from "./pages/Signin.tsx";
 import Signup from "./pages/Signup.tsx";
 import Create from "./pages/Create.tsx";
+import AuthComponent from "./components/AuthComponent.tsx";
 
 const client = new ApolloClient({
   uri: "/api",
   cache: new InMemoryCache(),
   credentials: "same-origin",
 });
+enum AuthStates {
+  LOGGED_IN = "LOGGED_IN",
+  LOGGED_OUT = "LOGGED_OUT",
+}
 
 const router = createBrowserRouter([
   {
@@ -30,7 +35,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/create",
-        element: <Create />,
+        element: (
+          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+            <Create />
+          </AuthComponent>
+        ),
       },
       // {
       //   path: "*",
@@ -42,27 +51,55 @@ const router = createBrowserRouter([
       },
       {
         path: "/categories/:id",
-        element: <Category />,
+        element: (
+          <AuthComponent
+            authStates={[AuthStates.LOGGED_OUT, AuthStates.LOGGED_IN]}
+          >
+            <Category />
+          </AuthComponent>
+        ),
       },
       {
         path: "/ads/:id",
-        element: <AdDetails />,
+        element: (
+          <AuthComponent
+            authStates={[AuthStates.LOGGED_OUT, AuthStates.LOGGED_IN]}
+          >
+            <AdDetails />
+          </AuthComponent>
+        ),
       },
       {
         path: "/ads/new",
-        element: <AdEditor />,
+        element: (
+          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+            <AdEditor />
+          </AuthComponent>
+        ),
       },
       {
         path: `ads/:id/edit`,
-        element: <AdEditor />,
+        element: (
+          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+            <AdEditor />
+          </AuthComponent>
+        ),
       },
       {
         path: `/signin`,
-        element: <Signin />,
+        element: (
+          <AuthComponent authStates={[AuthStates.LOGGED_OUT]}>
+            <Signin />
+          </AuthComponent>
+        ),
       },
       {
         path: `/signup`,
-        element: <Signup />,
+        element: (
+          <AuthComponent authStates={[AuthStates.LOGGED_OUT]}>
+            <Signup />
+          </AuthComponent>
+        ),
       },
     ],
   },

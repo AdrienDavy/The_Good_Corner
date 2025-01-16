@@ -105,7 +105,7 @@ const AdDetails: React.FC = () => {
               <p className=" flex justify-center items-center w-full">
                 {ad?.description}
               </p>
-              <p className=" text-center">By {ad?.owner}</p>
+              <p className=" text-center">Auteur {ad?.owner}</p>
               <p className=" text-center">{formatDateTime(ad?.createdAt)}</p>
               <p className=" text-center">{ad?.location}</p>
             </div>
@@ -119,13 +119,17 @@ const AdDetails: React.FC = () => {
                 </li>
               ))}
             </ul>
-            <h3 className=" text-center w-full">{ad?.price} €</h3>
+            <h3 className=" text-center w-full">
+              {ad?.price} €
+              {(ad?.category.name.includes("Immobilier") && "/mois") ||
+                (ad?.category.name.includes("Emploi") && "/mois")}
+            </h3>
 
             <div className="flex flex-col w-full">
               <button className="button mb-2 ad-card-button-hover">
-                Buy Now
+                Acheter maintenant
               </button>
-              {me && (
+              {me && me.email === ad?.owner && (
                 <div className="flex flex-col w-full">
                   <button
                     className="button mb-2 ad-card-button-hover "
