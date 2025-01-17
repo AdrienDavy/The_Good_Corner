@@ -1,6 +1,6 @@
 import AdCard from "./AdCard";
 import { useQuery } from "@apollo/client";
-import { queryRecentAds } from "../queries/QueryAds";
+import { queryRecentAds } from "../api/QueryAds";
 import Spinner from "../loaders/Spinner";
 
 const RecentAds = () => {

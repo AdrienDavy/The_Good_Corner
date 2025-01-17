@@ -1,7 +1,7 @@
 import AdCard from "../components/AdCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { queryCategory } from "../queries/QueryCategory";
+import { queryCategory } from "../api/QueryCategory";
 import Spinner from "../loaders/Spinner";
 
 const Category = () => {

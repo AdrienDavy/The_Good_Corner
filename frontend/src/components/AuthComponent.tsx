@@ -1,7 +1,7 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
 import { Navigate } from "react-router-dom";
-import { queryWhoAmI } from "../queries/WhoAmI";
+import { queryWhoAmI } from "../api/WhoAmI";
 
 enum AuthStates {
   LOGGED_IN = "LOGGED_IN",

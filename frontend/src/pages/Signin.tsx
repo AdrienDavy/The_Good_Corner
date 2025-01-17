@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
-import { mutationSignin } from "../queries/Signin";
+import { mutationSignin } from "../api/Signin";
 import { useNavigate } from "react-router-dom";
-import { queryWhoAmI } from "../queries/WhoAmI";
+import { queryWhoAmI } from "../api/WhoAmI";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +11,9 @@ const Signin = () => {
   const [revealPassword, setRevealPassword] = useState(false);
   const navigate = useNavigate();
 
-  const [doSignin] = useMutation(mutationSignin, { refetchQueries: [queryWhoAmI] });
+  const [doSignin] = useMutation(mutationSignin, {
+    refetchQueries: [queryWhoAmI],
+  });
 
   // Gestion de la soumission
   async function doSubmit() {

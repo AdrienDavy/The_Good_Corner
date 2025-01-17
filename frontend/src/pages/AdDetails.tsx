@@ -3,11 +3,11 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AdType } from "../types";
 import formatDateTime from "../services/formatDateTime";
 import { useMutation, useQuery } from "@apollo/client";
-import { queryAd } from "../queries/QueryAd";
-import { mutationDeleteAd } from "../queries/DeleteAd";
+import { queryAd } from "../api/QueryAd";
+import { mutationDeleteAd } from "../api/DeleteAd";
 import { toast } from "react-toastify";
 import Spinner from "../loaders/Spinner";
-import { queryWhoAmI } from "../queries/WhoAmI";
+import { queryWhoAmI } from "../api/WhoAmI";
 
 const AdDetails: React.FC = () => {
   const navigate = useNavigate();

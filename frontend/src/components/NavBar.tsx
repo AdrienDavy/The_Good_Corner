@@ -2,10 +2,10 @@ import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import React from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { queryCategories } from "../queries/QueryCategories";
+import { queryCategories } from "../api/QueryCategories";
 import CategoriesLoader from "../loaders/NavBar/CategoriesLoader";
-import { queryWhoAmI } from "../queries/WhoAmI";
-import { mutationSignout } from "../queries/Signout";
+import { queryWhoAmI } from "../api/WhoAmI";
+import { mutationSignout } from "../api/Signout";
 
 const NavBar = () => {
   const { data: categoriesdatas, loading } = useQuery(queryCategories);

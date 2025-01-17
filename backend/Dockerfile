@@ -1,5 +1,7 @@
 FROM node:20-alpine3.21
 
+RUN apk update && apk add curl
+
 WORKDIR /app
 
 COPY package.json package.json

@@ -5,16 +5,16 @@ import OptionSelect from "../components/OptionSelect";
 import ButtonTriggerModal from "../components/ButtonTriggerModal";
 import CategoryEditor from "../components/CategoryEditor";
 import { useMutation, useQuery } from "@apollo/client";
-import { queryCategories } from "../queries/QueryCategories";
-import { queryAd } from "../queries/QueryAd";
-import { queryTags } from "../queries/QueryTags";
-import { mutationCreateAd } from "../queries/CreateAd";
-import { mutationUpdateAd } from "../queries/UpdateAd";
+import { queryCategories } from "../api/QueryCategories";
+import { queryAd } from "../api/QueryAd";
+import { queryTags } from "../api/QueryTags";
+import { mutationCreateAd } from "../api/CreateAd";
+import { mutationUpdateAd } from "../api/UpdateAd";
 import MultiSelect from "../components/MultiSelect";
 import TagEditor from "../components/TagEditor";
 import { toast } from "react-toastify";
 import { handleValidationErrors } from "../utils/handleValidationErrors";
-import { queryWhoAmI } from "../queries/WhoAmI";
+import { queryWhoAmI } from "../api/WhoAmI";
 
 const AdEditor = () => {
   const navigate = useNavigate();

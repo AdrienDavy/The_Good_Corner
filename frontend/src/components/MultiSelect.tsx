@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { TagType } from "../types";
 import { useQuery } from "@apollo/client";
-import { queryTags } from "../queries/QueryTags";
+import { queryTags } from "../api/QueryTags";
 import useClickOutside from "../hooks/useClickOutside";
 
 type MultiSelectProps = {

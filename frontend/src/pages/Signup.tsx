@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { mutationCreateUser } from "../queries/CreateUser";
+import { mutationCreateUser } from "../api/CreateUser";
 import { useState } from "react";
 
 const Signup = () => {

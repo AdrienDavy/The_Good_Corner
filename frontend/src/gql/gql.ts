@@ -23,7 +23,7 @@ const documents = {
     "\nmutation DeleteTag($id: ID!) {\n  deleteTag(id: $id) {\n    id\n  }\n}\n": types.DeleteTagDocument,
     "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    owner\n    picture\n    price\n    title\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n": types.AdDocument,
     "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    owner\n    createdAt\n    category {\n      id\n      name\n    }\n  }\n}\n": types.AdsDocument,
-    "\nquery Categories {\n  categories {\n    id\n    name    \n  }\n}\n": types.CategoriesDocument,
+    "\nquery Categories {\n  categories {\n    id\n    name\n  }    \n}\n": types.CategoriesDocument,
     "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      owner\n      location\n      createdAt\n      tags {\n        id\n        name\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n": types.CategoryDocument,
     "\nquery QueryTag($tagId: ID!) { \n  tag(id: $tagId) {\n    id\n    name\n    ads {\n      title\n      price\n      picture\n      owner\n      location\n      id\n      description\n      createdAt\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n\n": types.QueryTagDocument,
     "\nquery Tags {\n  tags {\n    id\n    name    \n  }\n}\n": types.TagsDocument,
@@ -88,7 +88,7 @@ export function gql(source: "\nquery Ads{\n  ads {\n    id\n    picture\n    tit
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Categories {\n  categories {\n    id\n    name    \n  }\n}\n"): (typeof documents)["\nquery Categories {\n  categories {\n    id\n    name    \n  }\n}\n"];
+export function gql(source: "\nquery Categories {\n  categories {\n    id\n    name\n  }    \n}\n"): (typeof documents)["\nquery Categories {\n  categories {\n    id\n    name\n  }    \n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

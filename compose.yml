@@ -1,14 +1,4 @@
 services:
-    front:
-        build: ./frontend
-        ports:
-            - 5173:5173
-        volumes:
-            - ./frontend/index.html:/app/index.html
-            - ./frontend/src:/app/src
-            - ./frontend/public:/app/public
-            - ./frontend/vite.config.ts:/app/vite.config.ts
-
     back:
         build: ./backend
         ports:
@@ -20,6 +10,25 @@ services:
         env_file:
             - database.env
             - backend.env
+        healthcheck:
+            test: [ "CMD", "curl", "--fail", "--request", "POST", "--header", "Content-Type: application/json", "--url", "http://back:5000", "--data", "{\"query\": \"query { __typename}\"}" ]
+            interval: 2s
+            timeout: 260s
+
+    front:
+        build: ./frontend
+        environment:
+            - GRAPHQL_SCHEMA_URL=http://back:5000
+        ports:
+            - 5173:5173 # host_port:container_port
+        volumes:
+            - ./frontend/index.html:/app/index.html
+            - ./frontend/src:/app/src
+            - ./frontend/public:/app/public
+            - ./frontend/vite.config.ts:/app/vite.config.ts
+        depends_on:
+            back:
+                condition: service_healthy
 
     db:
         image: postgres

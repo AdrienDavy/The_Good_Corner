@@ -11,6 +11,7 @@ COPY tsconfig.json tsconfig.json
 COPY tsconfig.app.json tsconfig.app.json
 COPY tsconfig.node.json tsconfig.node.json
 COPY vite.config.ts vite.config.ts
+COPY codegen.ts codegen.ts
 COPY postcss.config.js postcss.config.js
 COPY tailwind.config.js tailwind.config.js
 COPY index.html index.html
@@ -19,4 +20,4 @@ COPY src src
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["npm", "run", "dev-and-codegen"] 

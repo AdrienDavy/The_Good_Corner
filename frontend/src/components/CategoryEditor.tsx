@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
-import { mutationCreateCategory } from "../queries/CreateCategory";
+import { mutationCreateCategory } from "../api/CreateCategory";
 import { CategoryType } from "../types";
-import { queryCategories } from "../queries/QueryCategories";
+import { queryCategories } from "../api/QueryCategories";
 import { toast } from "react-toastify";
-import { mutationDeleteCategory } from "../queries/DeleteCategory";
+import { mutationDeleteCategory } from "../api/DeleteCategory";
 import OptionSelect from "./OptionSelect";
 // import useClickOutside from "../hooks/useClickOutside";
 import { handleValidationErrors } from "../utils/handleValidationErrors";
