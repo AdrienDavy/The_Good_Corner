@@ -4,7 +4,11 @@ export const queryTags = gql(`
 query Tags {
   tags {
     id
-    name    
+    name
+    createdBy {
+      id
+      email
+    } 
   }
 }
 `);

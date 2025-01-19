@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "graphql-codegen": "graphql-codegen",
-    "dev-and-codegen": "concurrently -n \"DEV,CODEGEN\" -c \"blue,green\" \"npx vite --host\" \"npx graphql-codegen --watch\""
+     "dev-and-codegen": "concurrently \"npx vite --host\" \"npx graphql-codegen --watch\""
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",

@@ -8,8 +8,11 @@ query Ads{
     picture
     title
     price
-    owner
     createdAt
+    createdBy {
+      id
+      email
+    }
     category {
       id
       name

@@ -14,6 +14,7 @@ import {
     BaseEntity,
     BeforeInsert,
     Column,
+    CreateDateColumn,
     Entity,
     JoinTable,
     ManyToMany,
@@ -51,10 +52,6 @@ export class Ad extends BaseEntity {
     description!: string;
 
     @Column()
-    @Field()
-    owner!: string;
-
-    @Column()
     @Field(() => Int)
     price!: number;
 
@@ -66,7 +63,7 @@ export class Ad extends BaseEntity {
     @Field()
     location!: string;
 
-    @Column()
+    @CreateDateColumn()
     @Field()
     createdAt!: Date;
 
@@ -97,11 +94,6 @@ export class AdCreateInput {
     @IsNotEmpty({ message: "Description is required" })
     @Field({ nullable: true })
     description!: string;
-
-    @IsEmail({}, { message: "Owner must be a valid email" })
-    @IsNotEmpty({ message: "Owner is required" })
-    @Field()
-    owner!: string;
 
     @IsPositive({ message: "Price must be positive" })
     @Min(0, { message: "Price must be greater than or equal to 0" })
@@ -136,11 +128,6 @@ export class AdUpdateInput {
     @IsNotEmpty({ message: "Description is required" })
     @Field({ nullable: true })
     description!: string;
-
-    @IsEmail({}, { message: "Owner must be a valid email" })
-    @IsNotEmpty({ message: "Owner is required" })
-    @Field({ nullable: true })
-    owner!: string;
 
     @IsPositive({ message: "Price must be positive" })
     @Min(0, { message: "Price must be greater than or equal to 0" })

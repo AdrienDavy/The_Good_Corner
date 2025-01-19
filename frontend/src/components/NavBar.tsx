@@ -53,11 +53,26 @@ const NavBar = () => {
             </svg>
           </button>
         </form>
-        {me ? (
+        {me?.role === "admin" && (
           <>
-            <Link to="/create" className="button link-button">
-              Création
+            <Link to="/Admin" className="button link-button">
+              Admin
             </Link>
+            <Link to="/ads/new" className="button link-button">
+              <span className="mobile-short-label">Publier</span>
+              <span className="desktop-long-label">Publier une annonce</span>
+            </Link>
+            <button
+              type="button"
+              className="button link-button"
+              onClick={handleSignout}
+            >
+              Déconnexion
+            </button>
+          </>
+        )}
+        {me?.role === "user" ? (
+          <>
             <Link to="/ads/new" className="button link-button">
               <span className="mobile-short-label">Publier</span>
               <span className="desktop-long-label">Publier une annonce</span>

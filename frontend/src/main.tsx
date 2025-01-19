@@ -11,18 +11,16 @@ import AdEditor from "./pages/AdEditor.tsx";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import Signin from "./pages/Signin.tsx";
 import Signup from "./pages/Signup.tsx";
-import Create from "./pages/Create.tsx";
+import Create from "./pages/Admin.tsx";
 import AuthComponent from "./components/AuthComponent.tsx";
+import BadURLRedirect from "./components/BadURLRedirect.tsx";
+import { AuthStates } from "./services/AuthStates.ts";
 
 const client = new ApolloClient({
   uri: "/api",
   cache: new InMemoryCache(),
   credentials: "same-origin",
 });
-enum AuthStates {
-  LOGGED_IN = "LOGGED_IN",
-  LOGGED_OUT = "LOGGED_OUT",
-}
 
 const router = createBrowserRouter([
   {
@@ -34,9 +32,9 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/create",
+        path: "/admin",
         element: (
-          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+          <AuthComponent authStates={[AuthStates.admin]}>
             <Create />
           </AuthComponent>
         ),
@@ -53,7 +51,7 @@ const router = createBrowserRouter([
         path: "/categories/:id",
         element: (
           <AuthComponent
-            authStates={[AuthStates.LOGGED_OUT, AuthStates.LOGGED_IN]}
+            authStates={[AuthStates.unauthenticated, AuthStates.user]}
           >
             <Category />
           </AuthComponent>
@@ -63,7 +61,7 @@ const router = createBrowserRouter([
         path: "/ads/:id",
         element: (
           <AuthComponent
-            authStates={[AuthStates.LOGGED_OUT, AuthStates.LOGGED_IN]}
+            authStates={[AuthStates.unauthenticated, AuthStates.user]}
           >
             <AdDetails />
           </AuthComponent>
@@ -72,7 +70,7 @@ const router = createBrowserRouter([
       {
         path: "/ads/new",
         element: (
-          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+          <AuthComponent authStates={[AuthStates.user]}>
             <AdEditor />
           </AuthComponent>
         ),
@@ -80,7 +78,7 @@ const router = createBrowserRouter([
       {
         path: `ads/:id/edit`,
         element: (
-          <AuthComponent authStates={[AuthStates.LOGGED_IN]}>
+          <AuthComponent authStates={[AuthStates.user]}>
             <AdEditor />
           </AuthComponent>
         ),
@@ -88,7 +86,7 @@ const router = createBrowserRouter([
       {
         path: `/signin`,
         element: (
-          <AuthComponent authStates={[AuthStates.LOGGED_OUT]}>
+          <AuthComponent authStates={[AuthStates.unauthenticated]}>
             <Signin />
           </AuthComponent>
         ),
@@ -96,7 +94,7 @@ const router = createBrowserRouter([
       {
         path: `/signup`,
         element: (
-          <AuthComponent authStates={[AuthStates.LOGGED_OUT]}>
+          <AuthComponent authStates={[AuthStates.unauthenticated]}>
             <Signup />
           </AuthComponent>
         ),
@@ -105,7 +103,11 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <Page404 />,
+    element: (
+      <BadURLRedirect authStates={[AuthStates.unauthenticated, AuthStates.user]}>
+        <Page404 />
+      </BadURLRedirect>
+    ),
   },
 ]);
 

@@ -39,7 +39,7 @@ const AdCard = ({ ad }: { ad: AdsQuery["ads"][0] }) => {
         </button>
       </div>
       <div className=" text-xs p-1 gap-1 text-yellow-500">
-        <p className=" text-center">Auteur {ad?.owner}</p>
+        <p className=" text-center">Auteur {ad.createdBy.email}</p>
         {formatDateTime(ad?.createdAt)}
       </div>
     </div>

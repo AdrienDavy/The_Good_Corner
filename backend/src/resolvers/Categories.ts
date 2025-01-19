@@ -32,7 +32,7 @@ export class CategoriesResolver {
         }
     }
 
-    @Authorized()
+    @Authorized("admin")
     @Mutation(() => Category)
     async createCategory(
         @Arg("data", () => CategoryCreateInput,
@@ -48,7 +48,7 @@ export class CategoriesResolver {
         return newCategory;
     }
 
-    @Authorized()
+    @Authorized("admin")
     @Mutation(() => Category, { nullable: true })
     async updateCategory(
         @Arg("id", () => ID) id: number,
@@ -74,7 +74,7 @@ export class CategoriesResolver {
         }
     }
 
-    @Authorized()
+    @Authorized("admin")
     @Mutation(() => Category, { nullable: true })
     async deleteCategory(
         @Arg("id", () => ID) id: number,
@@ -90,7 +90,7 @@ export class CategoriesResolver {
         }
     }
 
-    @Authorized()
+    @Authorized("admin")
     @Mutation(() => [Category])
     async deleteCategories(
         @Arg("ids", () => [ID]) ids: number[],

@@ -1,23 +1,21 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { queryWhoAmI } from "../api/WhoAmI";
 import { AuthStates } from "../services/AuthStates";
 
-interface AuthComponentProps {
+interface BadURLRedirectProps {
   children: React.ReactNode;
   authStates: AuthStates[];
-  redirectTo?: string;
 }
 
-const AuthComponent: React.FC<AuthComponentProps> = ({
+const BadURLRedirect: React.FC<BadURLRedirectProps> = ({
   children,
   authStates,
-  redirectTo = "/",
 }) => {
   const { data: whoAmIData, loading } = useQuery(queryWhoAmI);
   const me = whoAmIData?.whoami;
-
+  const navigate = useNavigate();
   if (loading) {
     return (
       <button
@@ -52,10 +50,16 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
     (me && authStates.includes(AuthStates.user)) ||
     (me && me.role === "admin" && authStates.includes(AuthStates.admin))
   ) {
+    setTimeout(() => {
+      navigate("/");
+    }, 2000);
     return <>{children}</>;
   }
 
-  return <Navigate to={redirectTo} replace />;
+  setTimeout(() => {
+    navigate("/");
+  }, 1000);
+  return <>{children}</>;
 };
 
-export default AuthComponent;
+export default BadURLRedirect;

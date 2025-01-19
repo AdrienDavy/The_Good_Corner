@@ -1,5 +1,5 @@
 import { In } from "typeorm";
-import { IdInput } from "../entities/Id";
+import { IdInput } from "../entities/id";
 import { Tag } from "../entities/Tag"; // Import de la classe Tag
 
 export async function merge(entity: any, data: any): Promise<any> {

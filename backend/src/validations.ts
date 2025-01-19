@@ -16,12 +16,6 @@
 //             .max(50)
 //             .presence(presence),
 
-//         owner: Joi.string()
-//             .pattern(/^[A-Za-zÀ-ÿ\s\-']+$/)
-//             .min(1)
-//             .max(50)
-//             .presence(presence),
-
 //         price: Joi.number()
 //             .integer()
 //             .min(0)

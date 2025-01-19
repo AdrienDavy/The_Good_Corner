@@ -1,23 +1,50 @@
 import { IsEmail, Matches, MaxLength, MinLength } from "class-validator";
-import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ID, InputType, MiddlewareFn, ObjectType, UseMiddleware } from "type-graphql";
+import { BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ContextType } from "../auth";
+
+
+export const IsUser: MiddlewareFn<ContextType> = async ({ context, root }, next) => {
+    if (context.user) {
+        console.log("root", root);
+
+        if (context.user.role === "admin" || context.user.id === root.id) { //si je suis admin ou si je suis le user il faut que le user connecté soit le même que le user que le user requêté
+            return await next(); // dans ce cas on poursuit le traitement
+        } else {
+            return null; // sinon on arrête tout et on renvoie null
+        }
+    }
+}
 
 @Entity()
 @ObjectType()
 export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
-    @Field(() => ID!)
+    @Field(() => ID)
     id!: number;
 
     @Column({ unique: true })
     @IsEmail({}, { message: "Invalid email" })
-    @Field()
+    @Field({ nullable: true })  // this should be nullable because only admins + self user may see this, null otherwise
+    @UseMiddleware(IsUser)
     email!: string;
 
+    @Column({ enum: ["user", "admin"], default: "user" })
+    @Field()
+    role!: string;
 
     @Column()
     // @Field()
     hashedPassword!: string;
+
+    @CreateDateColumn()
+    @Field()
+    createdAt!: Date;
+
+    // may be needed if user can create other users
+    // @ManyToOne(() => User)
+    // @Field(() => User)
+    // createdBy!: User;
 }
 
 @InputType()

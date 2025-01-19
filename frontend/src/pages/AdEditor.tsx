@@ -28,7 +28,6 @@ const AdEditor = () => {
   const [price, setPrice] = useState(0);
   const [location, setLocation] = useState("");
   const [picture, setPicture] = useState("");
-  const [owner, setOwner] = useState("");
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [tagIds, setTagIds] = useState<number[]>([]);
   console.log("tagIds", tagIds);
@@ -74,7 +73,6 @@ const AdEditor = () => {
       setPrice(ad.price);
       setLocation(ad.location);
       setPicture(ad.picture);
-      setOwner(ad.owner);
       setCategoryId(ad.category ? Number(ad.category.id) : null);
       const tagsIds: number[] = [];
       for (const tag of ad.tags) {
@@ -91,7 +89,6 @@ const AdEditor = () => {
       setPrice(0);
       setLocation("");
       setPicture("");
-      setOwner(me?.email ?? "");
       setCategoryId(null);
       setTagIds([]);
     }
@@ -110,7 +107,6 @@ const AdEditor = () => {
               price,
               location,
               picture,
-              owner,
               category: categoryId ? { id: categoryId.toString() } : null,
               tags: tagIdsArray.map((id) => ({ id: id.toString() })),
             },
@@ -151,7 +147,6 @@ const AdEditor = () => {
               price,
               location,
               picture,
-              owner,
               category: { id: categoryId.toString() },
               tags: tagIds.map((id) => ({ id: id.toString() })),
             },
@@ -224,15 +219,7 @@ const AdEditor = () => {
           onChange={(e) => setPicture(e.target.value)}
         />
       </label>
-      <label className=" w-full">
-        <input
-          className=" w-full py-2 px-1 border-2 border-primary rounded-lg "
-          type="mail"
-          value={owner}
-          placeholder="johndoe@mail.com"
-          onChange={(e) => setOwner(e.target.value)}
-        />
-      </label>
+
       <div className="flex">
         <OptionSelect
           options={categories}

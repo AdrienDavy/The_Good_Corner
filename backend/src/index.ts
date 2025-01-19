@@ -8,7 +8,8 @@ import { CategoriesResolver } from "./resolvers/Categories";
 import { AdsResolver } from "./resolvers/Ads";
 import { TagsResolver } from "./resolvers/Tags";
 import { UsersResolver } from "./resolvers/Users";
-import { authChecker } from "./auth";
+import { authChecker, getUserFromContext } from "./auth";
+import { User } from "./entities/User";
 
 async function initiliaze() {
   await datasource.initialize();
@@ -23,10 +24,20 @@ async function initiliaze() {
   const server = new ApolloServer({ schema });
 
   const { url } = await startStandaloneServer(server, {
-    listen: { port: 5000 }, context: async ({ req, res }) => {
-      return {
+    listen: { port: 5000 },
+    context: async ({ req, res }) => {
+      const context = {
         req,
-        res
+        res,
+        user: undefined as User | null | undefined,
+      };
+      if (context.user) {
+        const user = await getUserFromContext(context);
+
+        context.user = user;
+        return context;
+      } else {
+        return { req, res };
       }
     }
   });

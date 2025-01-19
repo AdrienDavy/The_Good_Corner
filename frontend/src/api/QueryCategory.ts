@@ -6,15 +6,22 @@ query Category($categoryId: ID!) {
   category(id: $categoryId) {
     id
     name
+    createdBy {
+      id
+      email
+    }
     ads {
       id
       title
       picture
       price
       description
-      owner
       location
       createdAt
+      createdBy {
+      id
+      email
+    }    
       tags {
         id
         name

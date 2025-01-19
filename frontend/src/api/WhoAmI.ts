@@ -5,6 +5,7 @@ query Whoami {
   whoami {
     id
     email
+    role
   }
 }
 `);

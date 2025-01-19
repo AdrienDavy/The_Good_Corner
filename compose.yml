@@ -11,7 +11,7 @@ services:
             - database.env
             - backend.env
         healthcheck:
-            test: [ "CMD", "curl", "--fail", "--request", "POST", "--header", "Content-Type: application/json", "--url", "http://back:5000", "--data", "{\"query\": \"query { __typename}\"}" ]
+            test: 'curl --fail  --request POST --header ''Content-Type: application/json'' --url ''http://localhost:5000/'' --data ''{"query": "query { __typename }"}'''
             interval: 2s
             timeout: 260s
 
@@ -26,6 +26,7 @@ services:
             - ./frontend/src:/app/src
             - ./frontend/public:/app/public
             - ./frontend/vite.config.ts:/app/vite.config.ts
+            - ./frontend/tsconfig.json:/app/tsconfig.json
         depends_on:
             back:
                 condition: service_healthy

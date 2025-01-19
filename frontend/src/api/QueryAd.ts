@@ -8,10 +8,13 @@ query Ad($id: ID!) {
     description
     id
     location
-    owner
     picture
     price
     title
+    createdBy {
+      id
+      email
+    }
     category {
       id
       name

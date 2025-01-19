@@ -5,7 +5,6 @@ export type AdType = {
     price: number;
     location: string;
     picture: string;
-    owner: string;
     category: CategoryType | CategoryHeaderType;
     createdAt: string;
     tags?: TagType[];

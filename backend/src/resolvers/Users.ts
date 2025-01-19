@@ -8,8 +8,9 @@ import { ContextType, getUserFromContext } from "../auth";
 
 @Resolver()
 export class UsersResolver {
+    @Authorized()
     @Query(() => [User])
-    async users(): Promise<User[] | null> {
+    async users(@Ctx() context: ContextType): Promise<User[] | null> {
         const users = await User.find()
         if (users !== null) {
             return users
@@ -17,9 +18,13 @@ export class UsersResolver {
             return null;
         }
     }
+
+    @Authorized()
     @Query(() => User)
-    async user(@Arg("id", () => ID) id: number): Promise<User | null> {
-        const user = await User.findOneBy({ id })
+    async user(@Arg("id", () => ID) id: number,
+        @Ctx() context: ContextType
+    ): Promise<User | null> {
+        const user = await User.findOneBy({ id: context.user?.id });
         if (user) {
             return user
         } else {
@@ -40,6 +45,7 @@ export class UsersResolver {
                     const token = sign(
                         {
                             id: user.id,
+                            role: user.role
                         },
                         process.env.JWT_SECRET_KEY || "",
                     );
@@ -87,8 +93,8 @@ export class UsersResolver {
             await newUser.save()
             return newUser;
         } catch (error) {
-            console.error("Error creating user:", error);
-            return newUser;
+            console.error(error);
+            throw new Error("unable to create user");
         }
     }
 
@@ -123,12 +129,14 @@ export class UsersResolver {
     // @Authorized()
     @Query(() => User, { nullable: true })
     async whoami(@Ctx() context: ContextType): Promise<User | null> {
-        return await getUserFromContext(context);
+        return getUserFromContext(context);
+
     }
 
 
     @Mutation(() => Boolean)
     async signout(@Ctx() context: ContextType): Promise<boolean> {
+
         const cookies = new Cookies(context.req, context.res);
         cookies.set("token", "", { maxAge: 0 });
         return true;

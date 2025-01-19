@@ -1,7 +1,8 @@
-import { Arg, ID, Info, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, ID, Info, Mutation, Query, Resolver } from "type-graphql";
 import { Tag, TagCreateInput, TagUpdateInput } from "../entities/Tag";
 import { GraphQLResolveInfo } from "graphql";
 import { makeRelations } from "../utils/makeRelations";
+import { AuthContextType, ContextType } from "../auth";
 
 @Resolver()
 export class TagsResolver {
@@ -23,19 +24,26 @@ export class TagsResolver {
         }
     }
 
+    @Authorized("admin")
     @Mutation(() => Tag)
-    async createTag(@Arg("data", () => TagCreateInput) data: TagCreateInput): Promise<Tag> {
+    async createTag(
+        @Arg("data", () => TagCreateInput) data: TagCreateInput,
+        @Ctx() context: ContextType
+    ): Promise<Tag> {
         const newTag = new Tag();
-        Object.assign(newTag, data);
+        Object.assign(newTag, data, { createdBy: context.user });
         await newTag.save();
         return newTag;
     }
 
+    @Authorized("admin")
     @Mutation(() => Tag, { nullable: true })
     async updateTag(
         @Arg('id', () => ID) id: number,
-        @Arg("data", () => TagUpdateInput) data: TagUpdateInput): Promise<Tag | null> {
-        const tag = await Tag.findOneBy({ id });
+        @Arg("data", () => TagUpdateInput) data: TagUpdateInput,
+        @Ctx() context: ContextType
+    ): Promise<Tag | null> {
+        const tag = await Tag.findOneBy({ id, createdBy: { id: context.user?.id } });
         if (tag !== null) {
             Object.assign(tag, data);
             await tag.save();
@@ -46,12 +54,15 @@ export class TagsResolver {
     }
 
 
+    @Authorized("admin")
     @Mutation(() => Tag, { nullable: true })
-    async deleteTag(@Arg("id", () => ID) id: number): Promise<Tag | null> {
-        const tag = await Tag.findOneBy({ id });
+    async deleteTag(
+        @Arg("id", () => ID) id: number,
+        @Ctx() context: AuthContextType
+    ): Promise<Tag | null> {
+        const tag = await Tag.findOneBy({ id, createdBy: { id: context.user.id } });
         if (tag !== null) {
             await tag.remove();
-            Object.assign(tag, { id })
             return tag;
         } else {
             return null;

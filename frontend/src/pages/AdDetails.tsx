@@ -105,7 +105,10 @@ const AdDetails: React.FC = () => {
               <p className=" flex justify-center items-center w-full">
                 {ad?.description}
               </p>
-              <p className=" text-center">Auteur {ad?.owner}</p>
+              <p className=" text-center">
+                Auteur{" "}
+                {me && me.id === ad?.createdBy.id ? "Moi" : ad?.createdBy.email}
+              </p>
               <p className=" text-center">{formatDateTime(ad?.createdAt)}</p>
               <p className=" text-center">{ad?.location}</p>
             </div>
@@ -129,7 +132,7 @@ const AdDetails: React.FC = () => {
               <button className="button mb-2 ad-card-button-hover">
                 Acheter maintenant
               </button>
-              {me && me.email === ad?.owner && (
+              {me && me.id === ad?.createdBy.id && (
                 <div className="flex flex-col w-full">
                   <button
                     className="button mb-2 ad-card-button-hover "

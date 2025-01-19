@@ -6,11 +6,14 @@ query QueryTag($tagId: ID!) {
   tag(id: $tagId) {
     id
     name
+    createdBy {
+      id
+      email
+    }
     ads {
       title
       price
       picture
-      owner
       location
       id
       description
