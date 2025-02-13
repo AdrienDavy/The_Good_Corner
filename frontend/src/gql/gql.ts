@@ -14,22 +14,22 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
-    "\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n  }\n}\n": types.CreateAdDocument,
+    "\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n    createdBy {\n      id\n      email\n      role\n      }\n  }\n}\n": types.CreateAdDocument,
     "\nmutation CreateCategory($data: CategoryCreateInput!) {\n  createCategory(data: $data) {\n    id\n  }\n}\n": types.CreateCategoryDocument,
     "\nmutation CreateTag($data: TagCreateInput!) {\n  createTag(data: $data) {\n    id\n  }\n}\n": types.CreateTagDocument,
     "\nmutation CreateUser($data: UserCreateInput!) {\n    createUser(data: $data) {\n      id\n      email\n    }\n  }": types.CreateUserDocument,
     "\nmutation DeleteAd($id: ID!) {\n  deleteAd(id: $id) {\n    id\n  }\n}\n": types.DeleteAdDocument,
     "\nmutation DeleteCategory($id: ID!) {\n  deleteCategory(id: $id) {\n    id\n  }\n}\n": types.DeleteCategoryDocument,
     "\nmutation DeleteTag($id: ID!) {\n  deleteTag(id: $id) {\n    id\n  }\n}\n": types.DeleteTagDocument,
-    "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n": types.AdDocument,
-    "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n": types.AdsDocument,
+    "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n": types.AdDocument,
+    "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n": types.AdsDocument,
     "\nquery Categories {\n  categories {\n    id\n    name\n    createdAt\n    createdBy {\n      id\n      email\n    }\n  }    \n}\n": types.CategoriesDocument,
     "\nquery Category($categoryId: ID!) {\n  category(id: $categoryId) {\n    id\n    name\n    createdBy {\n      id\n      email\n    }\n    ads {\n      id\n      title\n      picture\n      price\n      description\n      location\n      createdAt\n      createdBy {\n      id\n      email\n    }    \n      tags {\n        id\n        name\n      }\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n": types.CategoryDocument,
     "\nquery QueryTag($tagId: ID!) { \n  tag(id: $tagId) {\n    id\n    name\n    createdBy {\n      id\n      email\n    }\n    ads {\n      title\n      price\n      picture\n      location\n      id\n      description\n      createdAt\n      category {\n        id\n        name\n      }\n    }\n  }\n}\n\n": types.QueryTagDocument,
     "\nquery Tags {\n  tags {\n    id\n    name\n    createdBy {\n      id\n      email\n    } \n  }\n}\n": types.TagsDocument,
     "\nmutation Signin($email: String!, $password: String! ) {\n  signin(email: $email, password: $password) {\n    id\n    email\n  }\n}": types.SigninDocument,
     "\nmutation Mutation {\n  signout\n}\n  ": types.MutationDocument,
-    "\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n  }\n}\n": types.UpdateAdDocument,
+    "\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n   \n  }\n}\n": types.UpdateAdDocument,
     "\nmutation UpdateCategory($data: CategoryUpdateInput!, $id:ID!) {\n  updateCategory(data: $data, id:$id) {\n    id\n  }\n}\n": types.UpdateCategoryDocument,
     "\nmutation UpdateTag($data: TagUpdateInput!, $id:ID!) {\n  updateTag(data: $data, id:$id) {\n    id\n  }\n}\n": types.UpdateTagDocument,
     "\nquery Whoami {\n  whoami {\n    id\n    email\n    role\n  }\n}\n": types.WhoamiDocument,
@@ -52,7 +52,7 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n  }\n}\n"): (typeof documents)["\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n  }\n}\n"];
+export function gql(source: "\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n    createdBy {\n      id\n      email\n      role\n      }\n  }\n}\n"): (typeof documents)["\nmutation CreateAd($data: AdCreateInput!) {\n  createAd(data: $data) {\n    id\n    createdBy {\n      id\n      email\n      role\n      }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -80,11 +80,11 @@ export function gql(source: "\nmutation DeleteTag($id: ID!) {\n  deleteTag(id: $
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n"];
+export function gql(source: "\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery Ad($id: ID!) {\n  ad(id: $id) {\n    createdAt\n    description\n    id\n    location\n    picture\n    price\n    title\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n    tags {\n      id\n      name\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n"];
+export function gql(source: "\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n"): (typeof documents)["\nquery Ads{\n  ads {\n    id\n    picture\n    title\n    price\n    createdAt\n    createdBy {\n      id\n      email\n      role\n    }\n    category {\n      id\n      name\n    }\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -112,7 +112,7 @@ export function gql(source: "\nmutation Mutation {\n  signout\n}\n  "): (typeof 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n  }\n}\n"): (typeof documents)["\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n  }\n}\n"];
+export function gql(source: "\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n   \n  }\n}\n"): (typeof documents)["\nmutation UpdateAd($data: AdUpdateInput!, $id:ID!) {\n  updateAd(data: $data, id:$id) {\n    id\n   \n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

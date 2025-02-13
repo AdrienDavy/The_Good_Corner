@@ -14,6 +14,7 @@ query Ad($id: ID!) {
     createdBy {
       id
       email
+      role
     }
     category {
       id

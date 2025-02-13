@@ -5,6 +5,11 @@ export const mutationCreateAd = gql(`
 mutation CreateAd($data: AdCreateInput!) {
   createAd(data: $data) {
     id
+    createdBy {
+      id
+      email
+      role
+      }
   }
 }
 `);

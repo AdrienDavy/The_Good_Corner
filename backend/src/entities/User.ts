@@ -8,7 +8,7 @@ export const IsUser: MiddlewareFn<ContextType> = async ({ context, root }, next)
     if (context.user) {
         console.log("root", root);
 
-        if (context.user.role === "admin" || context.user.id === root.id) { //si je suis admin ou si je suis le user il faut que le user connecté soit le même que le user que le user requêté
+        if (context.user.role === "admin" || context.user.id === root.id) { //si je suis admin ou si je suis le user il faut que le user connecté soit le même que le user requêté
             return await next(); // dans ce cas on poursuit le traitement
         } else {
             return null; // sinon on arrête tout et on renvoie null

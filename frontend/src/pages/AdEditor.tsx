@@ -73,7 +73,7 @@ const AdEditor = () => {
       setPrice(ad.price);
       setLocation(ad.location);
       setPicture(ad.picture);
-      setCategoryId(ad.category ? Number(ad.category.id) : null);
+      setCategoryId(Number(ad.category.id) || null);
       const tagsIds: number[] = [];
       for (const tag of ad.tags) {
         tagsIds.push(Number(tag.id));
@@ -92,7 +92,7 @@ const AdEditor = () => {
       setCategoryId(null);
       setTagIds([]);
     }
-  }, [locationPathname, me]);
+  }, [locationPathname]);
 
   const handleSubmit = async () => {
     const tagIdsArray = [...tagIds];
@@ -105,7 +105,6 @@ const AdEditor = () => {
               title,
               description,
               price,
-              location,
               picture,
               category: categoryId ? { id: categoryId.toString() } : null,
               tags: tagIdsArray.map((id) => ({ id: id.toString() })),

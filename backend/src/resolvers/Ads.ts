@@ -38,7 +38,7 @@ export class AdsResolver {
     @Mutation(() => Ad)
     async createAd(
         @Arg("data", () => AdCreateInput) data: AdCreateInput,
-        @Ctx() context: ContextType
+        @Ctx() context: AuthContextType
     ): Promise<Ad> {
         const newAd = new Ad();
         Object.assign(newAd, data, { createdBy: context.user });

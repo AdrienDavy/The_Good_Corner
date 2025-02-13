@@ -31,14 +31,12 @@ async function initiliaze() {
         res,
         user: undefined as User | null | undefined,
       };
-      if (context.user) {
-        const user = await getUserFromContext(context);
 
-        context.user = user;
-        return context;
-      } else {
-        return { req, res };
-      }
+      const user = await getUserFromContext(context);
+
+      context.user = user;
+      return context;
+
     }
   });
   console.log(`GraphQL server ready at ${url}`);

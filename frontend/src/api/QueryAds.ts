@@ -12,6 +12,7 @@ query Ads{
     createdBy {
       id
       email
+      role
     }
     category {
       id

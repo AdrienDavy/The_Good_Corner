@@ -24,8 +24,9 @@ import {
 import { Category } from "./Category";
 import { Tag } from "./Tag";
 import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
+import { User, UserCreateInput, UserUpdateInput } from "./User";
+import { AuthContextType, ContextType } from "../auth";
 import { IdInput } from "./id";
-import { User } from "./User";
 
 @Entity()
 @ObjectType()
@@ -143,4 +144,5 @@ export class AdUpdateInput {
     @IsNotEmpty({ message: "Location is required" })
     @Field({ nullable: true })
     location!: string;
+
 }
