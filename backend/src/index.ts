@@ -13,13 +13,13 @@ import { User } from "./entities/User";
 
 async function initiliaze() {
   await datasource.initialize();
-  console.log("Datasource is connected 🔌");
+  console.info("Datasource is connected 🔌");
 
   const schema = await buildSchema({
     resolvers: [UsersResolver, AdsResolver, CategoriesResolver, TagsResolver],
     validate: true,
-    authChecker
-  })
+    authChecker,
+  });
 
   const server = new ApolloServer({ schema });
 
@@ -36,12 +36,9 @@ async function initiliaze() {
 
       context.user = user;
       return context;
-
-    }
+    },
   });
-  console.log(`GraphQL server ready at ${url}`);
-
-
+  console.info(`GraphQL server ready at ${url}`);
 }
 
 initiliaze();

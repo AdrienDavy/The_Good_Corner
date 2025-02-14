@@ -25,7 +25,7 @@ export async function getUserFromContext(
     };
 
     // token valid
-    console.log("OK, access authorized ✔ ");
+    console.info("OK, access authorized ✔ ");
 
     // get associated user
     const user = await User.findOneBy({
@@ -35,7 +35,7 @@ export async function getUserFromContext(
     return user;
   } catch {
     // token invalid
-    console.log("Invalid JWT token ❌ ");
+    console.info("Invalid JWT token ❌ ");
     return null;
   }
 }
@@ -44,7 +44,6 @@ export const authChecker: AuthChecker<ContextType> = async (
   { root, args, context, info },
   roles
 ) => {
-  console.log("Auth Checker");
   // @Authorized(["admin", "user"]) → roles = ["admin", "user"]
   // @Authorized() → roles = []
   // if the roles are omitted, should be consider as an admin autorization → least privileges security concern
